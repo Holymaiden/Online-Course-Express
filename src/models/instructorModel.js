@@ -26,6 +26,7 @@ async function findOneInstructor(dataId) {
       "course.deleted_at": null,
       "users.deleted_at": null,
       "category.deleted_at": null,
+      "instructor.deleted_at": null,
     })
     .first();
 }
@@ -61,6 +62,7 @@ async function getAllInstructor(
       "course.deleted_at": null,
       "users.deleted_at": null,
       "category.deleted_at": null,
+      "instructor.deleted_at": null,
     });
 
   if (search != null) {

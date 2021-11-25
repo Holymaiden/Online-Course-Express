@@ -3,7 +3,7 @@ exports.up = function (knex) {
     table.increments("id").primary();
     table.integer("user_id").unsigned().notNullable();
     table.integer("course_id").unsigned().notNullable();
-    table.integer("payment_id", 2).unsigned().notNullable();
+    table.integer("payment_id", 2).unsigned().nullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.datetime("updated_at").nullable();
     table.datetime("deleted_at").nullable();

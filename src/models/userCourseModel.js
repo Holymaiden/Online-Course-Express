@@ -27,14 +27,8 @@ async function findOneUserCourse(dataId) {
     .first();
 }
 
-async function getAllUserCourse(
-  limit,
-  startIndex,
-  sort = "user_course.created_at",
-  ordinal = "DESC",
-  search = null
-) {
-  let query = connection
+async function getAllUserCourse(dataId) {
+  return connection
     .select(
       "user_course.id",
       "users.id as user_id",
@@ -56,14 +50,6 @@ async function getAllUserCourse(
       "users.deleted_at": null,
       "user_course.deleted_at": null,
     });
-
-  if (search != null) {
-    query = query.where("users.username", "like", `%${search}%`);
-  }
-
-  query.orderBy(sort, ordinal).limit(limit).offset(startIndex);
-
-  return query;
 }
 
 async function getAllUserCourseByUser(

@@ -141,7 +141,12 @@ async function createTransaction(data) {
 }
 
 async function updateTransaction(id, data) {
-  return connection("transaction").where("id", id).update(data);
+  return connection("transaction").where("id", id).update({
+    user_id: data.user_id,
+    course_id: data.course_id,
+    payment_id: data.payment_id,
+    updated_at: new Date(),
+  });
 }
 
 async function destroyTransaction(id) {

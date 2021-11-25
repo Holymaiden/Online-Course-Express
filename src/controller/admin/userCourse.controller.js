@@ -11,21 +11,9 @@ const Response = require("../../response/response");
 
 userCourseList = async (req, res) => {
   try {
-    let course = await getNumberOfUserCourses();
-    const paging = await paginate(
-      req.query.page,
-      req.query.limit,
-      course.count
-    );
-    course = await getAllUserCourse(
-      paging.currentPage.limit,
-      paging.currentPage.startIndex,
-      req.query.sort,
-      req.query.ordinal,
-      req.query.search
-    );
+    const course = await getAllUserCourse();
 
-    return Response.success(res, course, paging);
+    return Response.success(res, course);
   } catch (error) {
     return res.status(400).json({ err: error.message });
   }
