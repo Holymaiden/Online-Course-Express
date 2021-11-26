@@ -26,7 +26,7 @@ const {
 } = require("../middleware/auth");
 
 router.post("/login", authValidation, loginController);
-router.post("/register", authValidation, registerController);
+router.post("/register", registerController);
 
 // Admin Route
 router.use("/admin/user", authAdminMiddleware, User);

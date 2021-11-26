@@ -2,6 +2,9 @@ const { createUser } = require("../../models/userModel");
 const Response = require("../../response/response");
 const { hashingPassword } = require("../../helper/hashPassword");
 const genarateAccessToken = require("../../helper/genarateAccessToken");
+const authValidation = require("../../validation/auth/auth.validation");
+
+const upload = require("../../../config/multer");
 
 /**
  * @param {Request} req
@@ -9,16 +12,26 @@ const genarateAccessToken = require("../../helper/genarateAccessToken");
  * register user
  */
 const register = async (req, res) => {
-  let data = req.body;
-
   try {
-    data.password = await hashingPassword(req.body.password, 10);
+    upload.single("avatar")(req, res, async () => {
+      authValidation(req, res, next);
+      if (req.file == undefined) {
+        res.status(400).json({ message: "no file selected" });
+      } else {
+        try {
+          let data = req.body;
+          data.password = await hashingPassword(req.body.password, 10);
+          data.avatar = req.file.path;
+          let [user] = await createUser(data);
 
-    let [user] = await createUser(data);
+          const token = await genarateAccessToken(user);
 
-    const token = await genarateAccessToken(user);
-
-    return Response.success(res, token);
+          return Response.success(res, token);
+        } catch (error) {
+          res.status(400).json({ err: error.message });
+        }
+      }
+    });
   } catch (error) {
     if (error.code == "ER_DUP_ENTRY") {
       return res.status(403).json({
