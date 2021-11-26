@@ -7,6 +7,7 @@ const {
 } = require("../../models/userModel");
 const { hashingPassword } = require("../../helper/hashPassword");
 const Response = require("../../response/response");
+const upload = require("../../../config/multer");
 
 const userList = async (req, res) => {
   try {
@@ -39,12 +40,22 @@ const userDestroy = async (req, res) => {
 };
 
 const userUpdate = async (req, res) => {
-  const data = req.body;
   try {
-    data.password = await hashingPassword(req.body.password, 10);
-    users = await updateUser(data, req.params.dataId);
+    upload.single("avatar")(req, res, async () => {
+      if (req.file == undefined) {
+        res.status(400).json({ message: "no file selected" });
+      } else {
+        try {
+          const data = req.body;
+          data.password = await hashingPassword(req.body.password, 10);
+          users = await updateUser(data, req.params.dataId);
 
-    return Response.success(res, users);
+          return Response.success(res, users);
+        } catch (error) {
+          return res.status(400).json({ err: error.message });
+        }
+      }
+    });
   } catch (error) {
     return res.status(400).json({ err: error.message });
   }

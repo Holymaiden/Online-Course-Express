@@ -27,7 +27,7 @@ async function findOneUserCourse(dataId) {
     .first();
 }
 
-async function getAllUserCourse(dataId) {
+async function getAllUserCourse() {
   return connection
     .select(
       "user_course.id",

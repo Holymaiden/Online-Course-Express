@@ -30,6 +30,7 @@ async function createUser(data) {
       username: data.username,
       password: data.password,
       email: data.email,
+      avatar: data.avatar,
       created_at: new Date(),
     })
     .from("users")
@@ -48,6 +49,7 @@ async function updateUser(data, dataId) {
       username: data.username,
       password: data.password,
       email: data.email,
+      avatar: data.avatar,
       updated_at: new Date(),
     })
     .from("users")
