@@ -5,7 +5,6 @@ const validation = joi.object({
   title: joi.string().required(),
   content: joi.string().required(),
   description: joi.string().required(),
-  status: joi.number().required(),
 });
 
 const teachingMaterialValidation = (req, res, next) => {
@@ -15,7 +14,6 @@ const teachingMaterialValidation = (req, res, next) => {
       title: req.body.title,
       content: req.body.content,
       description: req.body.description,
-      status: req.body.status,
     });
 
     console.log(validationResult.error);
