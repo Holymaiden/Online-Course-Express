@@ -43,11 +43,13 @@ const userUpdate = async (req, res) => {
   try {
     upload.single("avatar")(req, res, async () => {
       if (req.file == undefined) {
-        res.status(400).json({ message: "no file selected" });
+        return res.status(400).json({ message: "no file selected" });
       } else {
         try {
           const data = req.body;
+          console.log(data);
           data.password = await hashingPassword(req.body.password, 10);
+          data.avatar = req.file.path;
           users = await updateUser(data, req.params.dataId);
 
           return Response.success(res, users);

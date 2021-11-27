@@ -19,13 +19,13 @@ const TransactionAdmin = require("./admin/transaction");
 const TransactionUser = require("./user/transaction");
 const loginController = require("../src/controller/auth/login.controller");
 const registerController = require("../src/controller/auth/register.controller");
-const authValidation = require("../src/validation/auth/auth.validation");
+// const authValidation = require("../src/validation/auth/auth.validation");
 const {
   authAdminMiddleware,
   authUserMiddleware,
 } = require("../middleware/auth");
 
-router.post("/login", authValidation, loginController);
+router.post("/login", loginController);
 router.post("/register", registerController);
 
 // Admin Route

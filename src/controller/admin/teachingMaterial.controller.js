@@ -9,29 +9,13 @@ const Response = require("../../response/response");
 
 teachingMaterialCreate = async (req, res) => {
   try {
-    // upload.single("file")(req, res, async () => {
+    let data = req.body;
+    data.slug = slug(req.body.title);
+    let slugData = await checkSlug(data.slug);
+    data.slug = `${data.slug}-${slugData.length}`;
+    data = await createTeachingMaterial(data);
 
-    if (req.file == undefined) {
-      res.status(400).json({ message: "no file selected" });
-    } else {
-      try {
-        //   const uploadResponse = await cloudinary.uploader.upload(
-        //     req.file.path,
-        //     { folder: "teachingMaterial" }
-        //   );
-        let data = req.body;
-        //   data.image = uploadResponse.secure_url;
-        data.slug = slug(req.body.title);
-        let slugData = await checkSlug(data.slug);
-        data.slug = `${data.slug}-${slugData.length}`;
-        data = await createTeachingMaterial(data);
-
-        return Response.success(res, data);
-      } catch (error) {
-        res.status(400).json({ err: error.message });
-      }
-    }
-    // });
+    return Response.success(res, data);
   } catch (error) {
     return res.status(400).json({ err: error });
   }

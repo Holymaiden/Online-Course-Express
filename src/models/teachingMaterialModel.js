@@ -78,7 +78,10 @@ async function getNumberOfTeachingMaterials() {
 async function createTeachingMaterial(data) {
   return connection("teaching_materials")
     .insert({
-      data,
+      course_id: data.course_id,
+      title: data.title,
+      content: data.content,
+      description: data.description,
     })
     .then(function (id) {
       return connection
@@ -109,7 +112,15 @@ async function createTeachingMaterial(data) {
 }
 
 async function updateTeachingMaterial(id, data) {
-  return connection("teaching_materials").where("id", id).update(data);
+  return connection("teaching_materials")
+    .where("id", id)
+    .update({
+      course_id: data.course_id,
+      title: data.title,
+      content: data.content,
+      description: data.description,
+      status: data.status,
+    });
 }
 
 async function destroyTeachingMaterial(id) {
