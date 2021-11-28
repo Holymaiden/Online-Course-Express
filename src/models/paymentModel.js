@@ -10,7 +10,14 @@ async function findOnePayment(dataId) {
     .first();
 }
 
-async function getAllPayment(
+async function getAllPayment() {
+  return connection
+    .select("id", "name", "account_number", "created_at", "updated_at")
+    .from("payment")
+    .where({ deleted_at: null });
+}
+
+async function getAllPaymentPaging(
   limit,
   startIndex,
   sort = "created_at",
@@ -73,4 +80,5 @@ module.exports = {
   getNumberOfPayments,
   updatePayment,
   destroyPayment,
+  getAllPaymentPaging,
 };

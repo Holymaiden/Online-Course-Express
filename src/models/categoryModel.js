@@ -10,7 +10,13 @@ async function findOneCategory(id) {
     .first();
 }
 
-async function getAllCategory(
+async function getAllCategory() {
+  return connection
+    .select("id", "title", "created_at", "updated_at")
+    .from("category");
+}
+
+async function getAllCategoryPaging(
   limit,
   startIndex,
   sort = "created_at",
@@ -60,4 +66,5 @@ module.exports = {
   getNumberOfCategory,
   createCategoryLog,
   getPopularCategory,
+  getAllCategoryPaging,
 };

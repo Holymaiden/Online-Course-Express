@@ -31,7 +31,36 @@ async function findOneInstructor(dataId) {
     .first();
 }
 
-async function getAllInstructor(
+async function getAllInstructor() {
+  return connection
+    .select(
+      "instructor.id",
+      "users.id as user_id",
+      "users.username",
+      "users.email",
+      "users.avatar",
+      "course.id as course_id",
+      "course.title as course",
+      "category.id as category_id",
+      "category.title as category",
+      "course.slug",
+      "course.status",
+      "course.created_at",
+      "course.updated_at"
+    )
+    .from("instructor")
+    .leftJoin("course", "instructor.course_id", "course.id")
+    .leftJoin("users", "instructor.user_id", "users.id")
+    .leftJoin("category", "course.category_id", "category.id")
+    .where({
+      "course.deleted_at": null,
+      "users.deleted_at": null,
+      "category.deleted_at": null,
+      "instructor.deleted_at": null,
+    });
+}
+
+async function getAllInstructorPaging(
   limit,
   startIndex,
   sort = "instructor.created_at",
@@ -139,4 +168,5 @@ module.exports = {
   getNumberOfInstructors,
   updateInstructor,
   destroyInstructor,
+  getAllInstructorPaging,
 };

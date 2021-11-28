@@ -5,14 +5,30 @@ const {
   getNumberOfCourses,
   getAllCourse,
   findOneCourse,
+  getAllCoursePaging,
 } = require("../../models/courseModel");
 const Response = require("../../response/response");
 
 courseList = async (req, res) => {
   try {
+    data = await getAllCourse();
+    let user = await getUser(req, res);
+
+    await data.forEach(async (element) => {
+      await createCategoryLog(element.category_id, user.id);
+    });
+
+    return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+coursePagingList = async (req, res) => {
+  try {
     let data = await getNumberOfCourses();
     const paging = await paginate(req.query.page, req.query.limit, data.count);
-    data = await getAllCourse(
+    data = await getAllCoursePaging(
       paging.currentPage.limit,
       paging.currentPage.startIndex,
       req.query.sort,
@@ -48,4 +64,4 @@ courseDetail = async (req, res) => {
   }
 };
 
-module.exports = { courseList, courseDetail };
+module.exports = { courseList, courseDetail, coursePagingList };

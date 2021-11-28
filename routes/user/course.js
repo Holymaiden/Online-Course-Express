@@ -5,6 +5,7 @@ const router = express.Router();
 
 /* GET users listing. */
 router.get("/", CourseController.courseList);
+router.get("/paging/list", CourseController.coursePagingList);
 router.get("/:slug", CourseController.courseDetail);
 
 module.exports = router;
