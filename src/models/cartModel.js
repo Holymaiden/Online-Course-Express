@@ -27,14 +27,8 @@ async function findOneCart(dataId) {
     .first();
 }
 
-async function getAllCart(
-  limit,
-  startIndex,
-  sort = "cart.created_at",
-  ordinal = "DESC",
-  search = null
-) {
-  let query = connection
+async function getAllCart() {
+  return connection
     .select(
       "cart.id",
       "cart.price",
@@ -56,14 +50,6 @@ async function getAllCart(
       "course.deleted_at": null,
       "users.deleted_at": null,
     });
-
-  if (search != null) {
-    query = query.where("users.username", "like", `%${search}%`);
-  }
-
-  query.orderBy(sort, ordinal).limit(limit).offset(startIndex);
-
-  return query;
 }
 
 async function getAllCartByUser(dataId) {

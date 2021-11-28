@@ -4,15 +4,26 @@ const {
   destroyInstructor,
   getAllInstructor,
   getNumberOfInstructors,
+  getAllInstructorPaging,
 } = require("../../models/instructorModel");
 const { paginate } = require("../../helper/pagination");
 const Response = require("../../response/response");
 
 instructorList = async (req, res) => {
   try {
+    let data = await getAllInstructor();
+
+    return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+instructorPagingList = async (req, res) => {
+  try {
     let data = await getNumberOfInstructors();
     const paging = await paginate(req.query.page, req.query.limit, data.count);
-    data = await getAllInstructor(
+    data = await getAllInstructorPaging(
       paging.currentPage.limit,
       paging.currentPage.startIndex,
       req.query.sort,
@@ -65,4 +76,5 @@ module.exports = {
   instructorUpdate,
   instructorList,
   instructorDestroy,
+  instructorPagingList,
 };

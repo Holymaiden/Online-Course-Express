@@ -4,5 +4,6 @@ const categoryController = require("../../src/controller/user/category.controlle
 
 router.get("/", categoryController.categoryList);
 router.get("/popular", categoryController.categoryPopularList);
+router.get("/paging", categoryController.categoryPagingList);
 
 module.exports = router;

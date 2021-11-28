@@ -11,13 +11,32 @@ async function findOneUser(username) {
     .first();
 }
 
-async function getAllUser(limit, startIndex) {
+async function getAllUser() {
   return connection
     .select("id", "username", "email", "avatar")
     .from("users")
-    .where({ deleted_at: null })
-    .limit(limit)
-    .offset(startIndex);
+    .where({ deleted_at: null });
+}
+
+async function getAllUserPaging(
+  limit,
+  startIndex,
+  sort = "created_at",
+  ordinal = "DESC",
+  search = null
+) {
+  let query = connection
+    .select("id", "username", "email", "avatar")
+    .from("users")
+    .where({ deleted_at: null });
+
+  if (search != null) {
+    query = query.where("title", "like", `%${search}%`);
+  }
+
+  query.orderBy(sort, ordinal).limit(limit).offset(startIndex);
+
+  return query;
 }
 
 async function getNumberOfUsers() {
@@ -78,4 +97,5 @@ module.exports = {
   getNumberOfUsers,
   destroyUser,
   updateUser,
+  getAllUserPaging,
 };

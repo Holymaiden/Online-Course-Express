@@ -3,16 +3,27 @@ const {
   getNumberOfCategory,
   getAllCategory,
   getPopularCategory,
+  getAllCategoryPaging,
 } = require("../../models/categoryModel");
 const Response = require("../../response/response");
 
 categoryList = async (req, res) => {
   try {
+    let data = await getAllCategory();
+
+    return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+categoryPagingList = async (req, res) => {
+  try {
     let data = await getNumberOfCategory();
 
     const paging = await paginate(req.query.page, req.query.limit, data.count);
 
-    data = await getAllCategory(
+    data = await getAllCategoryPaging(
       paging.currentPage.limit,
       paging.currentPage.startIndex,
       req.query.sort,
@@ -36,4 +47,4 @@ categoryPopularList = async (req, res) => {
   }
 };
 
-module.exports = { categoryList, categoryPopularList };
+module.exports = { categoryList, categoryPopularList, categoryPagingList };

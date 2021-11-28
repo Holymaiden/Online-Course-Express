@@ -28,7 +28,33 @@ async function findOneTeachingMaterial(slug) {
     .first();
 }
 
-async function getAllTeachingMaterial(
+async function getAllTeachingMaterial() {
+  return connection
+    .select(
+      "teaching_materials.id",
+      "course.id as course_id",
+      "category.id as category_id",
+      "category.title as category",
+      "course.title as course_title",
+      "teaching_materials.title",
+      "teaching_materials.slug",
+      "teaching_materials.content",
+      "teaching_materials.description",
+      "teaching_materials.status",
+      "teaching_materials.created_at",
+      "teaching_materials.updated_at"
+    )
+    .from("teaching_materials")
+    .where({
+      "course.deleted_at": null,
+      "category.deleted_at": null,
+      "teaching_materials.deleted_at": null,
+    })
+    .leftJoin("course", "teaching_materials.course_id", "course.id")
+    .leftJoin("category", "category.id", "course.category_id");
+}
+
+async function getAllTeachingMaterialPaging(
   limit,
   startIndex,
   sort = "teaching_materials.created_at",
@@ -112,15 +138,13 @@ async function createTeachingMaterial(data) {
 }
 
 async function updateTeachingMaterial(id, data) {
-  return connection("teaching_materials")
-    .where("id", id)
-    .update({
-      course_id: data.course_id,
-      title: data.title,
-      content: data.content,
-      description: data.description,
-      status: data.status,
-    });
+  return connection("teaching_materials").where("id", id).update({
+    course_id: data.course_id,
+    title: data.title,
+    content: data.content,
+    description: data.description,
+    status: data.status,
+  });
 }
 
 async function destroyTeachingMaterial(id) {
@@ -159,4 +183,5 @@ module.exports = {
   updateTeachingMaterial,
   destroyTeachingMaterial,
   checkSlug,
+  getAllTeachingMaterialPaging,
 };

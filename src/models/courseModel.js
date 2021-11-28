@@ -24,7 +24,26 @@ async function findOneCourse(slug) {
     .first();
 }
 
-async function getAllCourse(
+async function getAllCourse() {
+  return connection
+    .select(
+      "course.id",
+      "category.id as category_id",
+      "category.title as category",
+      "course.title",
+      "course.slug",
+      "course.description",
+      "course.price",
+      "course.status",
+      "course.created_at",
+      "course.updated_at"
+    )
+    .from("course")
+    .where({ "course.deleted_at": null, "category.deleted_at": null })
+    .leftJoin("category", "category.id", "course.category_id");
+}
+
+async function getAllCoursePaging(
   limit,
   startIndex,
   sort = "created_at",
@@ -150,4 +169,5 @@ module.exports = {
   updateCourse,
   destroyCourse,
   checkSlug,
+  getAllCoursePaging,
 };

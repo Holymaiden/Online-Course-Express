@@ -4,17 +4,9 @@ const Response = require("../../response/response");
 
 cartList = async (req, res) => {
   try {
-    let data = await getNumberOfCarts();
-    const paging = await paginate(req.query.page, req.query.limit, data.count);
-    data = await getAllCart(
-      paging.currentPage.limit,
-      paging.currentPage.startIndex,
-      req.query.sort,
-      req.query.ordinal,
-      req.query.search
-    );
+    let data = await getAllCart();
 
-    return Response.success(res, data, paging);
+    return Response.success(res, data);
   } catch (error) {
     return res.status(400).json({ err: error.message });
   }

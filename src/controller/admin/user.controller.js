@@ -4,6 +4,7 @@ const {
   getAllUser,
   destroyUser,
   updateUser,
+  getAllUserPaging,
 } = require("../../models/userModel");
 const { hashingPassword } = require("../../helper/hashPassword");
 const Response = require("../../response/response");
@@ -11,11 +12,21 @@ const upload = require("../../../config/multer");
 
 const userList = async (req, res) => {
   try {
-    let users = await getNumberOfUsers();
+    let users = await getAllUser();
 
-    const paging = await paginate(req.query.page, req.query.limit, users.count);
+    return Response.success(res, users);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
 
-    users = await getAllUser(
+const userPagingList = async (req, res) => {
+  try {
+    let data = await getNumberOfUsers();
+
+    const paging = await paginate(req.query.page, req.query.limit, data.count);
+
+    let users = await getAllUserPaging(
       paging.currentPage.limit,
       paging.currentPage.startIndex,
       req.query.sort,
@@ -63,4 +74,4 @@ const userUpdate = async (req, res) => {
   }
 };
 
-module.exports = { userList, userDestroy, userUpdate };
+module.exports = { userList, userDestroy, userUpdate, userPagingList };

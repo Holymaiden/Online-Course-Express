@@ -54,7 +54,36 @@ async function findTransactionUser(dataId, slug) {
     });
 }
 
-async function getAllTransaction(
+async function getAllTransaction() {
+  return connection
+    .select(
+      "transaction.id",
+      "users.id as user_id",
+      "users.username",
+      "users.email",
+      "course.id as course_id",
+      "course.title as course",
+      "course.slug",
+      "course.status",
+      "payment.id as payment_id",
+      "payment.name as payment",
+      "payment.account_number",
+      "transaction.created_at",
+      "transaction.updated_at"
+    )
+    .from("transaction")
+    .leftJoin("course", "transaction.course_id", "course.id")
+    .leftJoin("users", "transaction.user_id", "users.id")
+    .leftJoin("payment", "transaction.payment_id", "payment.id")
+    .where({
+      "transaction.deleted_at": null,
+      "users.deleted_at": null,
+      "course.deleted_at": null,
+      "payment.deleted_at": null,
+    });
+}
+
+async function getAllTransactionPaging(
   limit,
   startIndex,
   sort = "transaction.created_at",
@@ -168,4 +197,5 @@ module.exports = {
   getNumberOfTransactions,
   updateTransaction,
   destroyTransaction,
+  getAllTransactionPaging,
 };

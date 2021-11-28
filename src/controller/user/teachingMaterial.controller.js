@@ -5,14 +5,30 @@ const {
   getAllTeachingMaterial,
   getNumberOfTeachingMaterials,
   findOneTeachingMaterial,
+  getAllTeachingMaterialPaging,
 } = require("../../models/teachingMaterialModel");
 const Response = require("../../response/response");
 
 teachingMaterialList = async (req, res) => {
   try {
+    let data = await getAllTeachingMaterial();
+    let user = await getUser(req, res);
+
+    await data.forEach(async (element) => {
+      await createCategoryLog(element.category_id, user.id);
+    });
+
+    return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+teachingMaterialPagingList = async (req, res) => {
+  try {
     let data = await getNumberOfTeachingMaterials();
     const paging = await paginate(req.query.page, req.query.limit, data.count);
-    data = await getAllTeachingMaterial(
+    data = await getAllTeachingMaterialPaging(
       paging.currentPage.limit,
       paging.currentPage.startIndex,
       req.query.sort,
@@ -48,4 +64,8 @@ teachingMaterialDetail = async (req, res) => {
   }
 };
 
-module.exports = { teachingMaterialList, teachingMaterialDetail };
+module.exports = {
+  teachingMaterialList,
+  teachingMaterialDetail,
+  teachingMaterialPagingList,
+};

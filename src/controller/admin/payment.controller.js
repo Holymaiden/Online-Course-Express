@@ -5,15 +5,26 @@ const {
   getAllPayment,
   getNumberOfPayments,
   updatePayment,
+  getAllPaymentPaging,
 } = require("../../models/paymentModel");
 const { paginate } = require("../../helper/pagination");
 const Response = require("../../response/response");
 
 paymentList = async (req, res) => {
   try {
+    let data = await getAllPayment();
+
+    return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+paymentPagingList = async (req, res) => {
+  try {
     let data = await getNumberOfPayments();
     const paging = await paginate(req.query.page, req.query.limit, data.count);
-    data = await getAllPayment(
+    data = await getAllPaymentPaging(
       paging.currentPage.limit,
       paging.currentPage.startIndex,
       req.query.sort,
@@ -80,4 +91,5 @@ module.exports = {
   paymentUpdate,
   paymentList,
   paymentDestroy,
+  paymentPagingList,
 };

@@ -5,15 +5,26 @@ const {
   getAllTransaction,
   getNumberOfTransactions,
   updateTransaction,
+  getAllTransactionPaging,
 } = require("../../models/transactionModel");
 const { paginate } = require("../../helper/pagination");
 const Response = require("../../response/response");
 
 transactionList = async (req, res) => {
   try {
+    let data = await getAllTransaction();
+
+    return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+transactionPagingList = async (req, res) => {
+  try {
     let data = await getNumberOfTransactions();
     const paging = await paginate(req.query.page, req.query.limit, data.count);
-    data = await getAllTransaction(
+    data = await getAllTransactionPaging(
       paging.currentPage.limit,
       paging.currentPage.startIndex,
       req.query.sort,
@@ -80,4 +91,5 @@ module.exports = {
   transactionUpdate,
   transactionList,
   transactionDestroy,
+  transactionPagingList,
 };
