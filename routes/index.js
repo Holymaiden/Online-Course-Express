@@ -19,6 +19,8 @@ const TransactionAdmin = require("./admin/transaction");
 const TransactionUser = require("./user/transaction");
 const loginController = require("../src/controller/auth/login.controller");
 const registerController = require("../src/controller/auth/register.controller");
+const ScheduleAdmin = require("./admin/schedule");
+const ScheduleUser = require("./user/schedule");
 // const authValidation = require("../src/validation/auth/auth.validation");
 const {
   authAdminMiddleware,
@@ -42,6 +44,7 @@ router.use("/admin/userCourse", authAdminMiddleware, UserCourseAdmin);
 router.use("/admin/cart", authAdminMiddleware, CartAdmin);
 router.use("/admin/payment", authAdminMiddleware, PaymentAdmin);
 router.use("/admin/transaction", authAdminMiddleware, TransactionAdmin);
+router.use("/admin/schedule", authAdminMiddleware, ScheduleAdmin);
 
 // User Route
 router.use("/course", authUserMiddleware, Course);
@@ -51,6 +54,7 @@ router.use("/instructor", authUserMiddleware, InstructorUser);
 router.use("/userCourse", authUserMiddleware, UserCourseUser);
 router.use("/cart", authUserMiddleware, CartUser);
 router.use("/transaction", authUserMiddleware, TransactionUser);
+router.use("/schedule", authUserMiddleware, ScheduleUser);
 
 router.get("/", function (req, res, next) {
   console.log("Ready");
