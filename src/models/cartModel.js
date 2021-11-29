@@ -41,7 +41,8 @@ async function getAllCart() {
       "course.slug",
       "course.status",
       "cart.created_at",
-      "cart.updated_at"
+      "cart.updated_at",
+      "cart.deleted_at"
     )
     .from("cart")
     .leftJoin("course", "cart.course_id", "course.id")
@@ -88,7 +89,9 @@ async function getNumberOfCarts() {
 async function createCart(data) {
   return connection("cart")
     .insert({
-      data,
+      user_id: data.user_id,
+      course_id: data.course_id,
+      price: data.price,
     })
     .then(function (id) {
       return connection
@@ -118,7 +121,12 @@ async function createCart(data) {
 }
 
 async function updateCart(id, data) {
-  return connection("cart").where("id", id).update(data);
+  return connection("cart").where("id", id).update({
+    user_id: data.user_id,
+    course_id: data.course_id,
+    price: data.price,
+    updated_at: new Date(),
+  });
 }
 
 async function destroyCart(id) {

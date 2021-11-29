@@ -14,7 +14,7 @@ router.get("/", paymentList);
 router.get("/paging/list", paymentPagingList);
 router.get("/:dataId", paymentDetail);
 router.post("/", paymentValidation, paymentCreate);
-router.put("/:courseId", paymentValidation, paymentUpdate);
-router.put("/destroy/:courseId", paymentDestroy);
+router.put("/:dataId", paymentValidation, paymentUpdate);
+router.put("/destroy/:dataId", paymentDestroy);
 
 module.exports = router;

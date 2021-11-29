@@ -48,7 +48,8 @@ async function getNumberOfPayments() {
 async function createPayment(data) {
   return connection("payment")
     .insert({
-      data,
+      name: data.name,
+      account_number: data.account_number,
     })
     .then(function (id) {
       return connection
@@ -59,7 +60,13 @@ async function createPayment(data) {
 }
 
 async function updatePayment(id, data) {
-  return connection("payment").where("id", id).update(data);
+  return connection("payment")
+    .where("id", id)
+    .update({
+      name: data.name,
+      account_number: data.account_number,
+      updated_at: new Date(),
+    });
 }
 
 async function destroyPayment(id) {

@@ -66,7 +66,6 @@ paymentCreate = async (req, res) => {
 paymentUpdate = async (req, res) => {
   try {
     let data = req.body;
-    data.updated_at = new Date();
     await updatePayment(req.params.dataId, data);
 
     return Response.success(res, data);
