@@ -6,6 +6,8 @@ const {
   getAllCourse,
   findOneCourse,
   getAllCoursePaging,
+  getPopularCourse,
+  createCourseLog,
 } = require("../../models/courseModel");
 const Response = require("../../response/response");
 
@@ -16,6 +18,7 @@ courseList = async (req, res) => {
 
     await data.forEach(async (element) => {
       await createCategoryLog(element.category_id, user.id);
+      await createCourseLog(element.id, user.id);
     });
 
     return Response.success(res, data);
@@ -39,6 +42,7 @@ coursePagingList = async (req, res) => {
 
     await data.forEach(async (element) => {
       await createCategoryLog(element.category_id, user.id);
+      await createCourseLog(element.id, user.id);
     });
 
     return Response.success(res, data, paging);
@@ -57,6 +61,7 @@ courseDetail = async (req, res) => {
     }
 
     await createCategoryLog(data.category_id, user.id);
+    await createCourseLog(data.id, user.id);
 
     return Response.success(res, data);
   } catch (error) {
@@ -64,4 +69,19 @@ courseDetail = async (req, res) => {
   }
 };
 
-module.exports = { courseList, courseDetail, coursePagingList };
+coursePopularList = async (req, res) => {
+  try {
+    let data = await getPopularCourse();
+
+    return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+module.exports = {
+  courseList,
+  courseDetail,
+  coursePagingList,
+  coursePopularList,
+};

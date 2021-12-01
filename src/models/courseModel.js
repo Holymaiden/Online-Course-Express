@@ -160,6 +160,22 @@ async function checkSlug(slug) {
     .where("slug", "like", `%${slug}%`);
 }
 
+async function createCourseLog(courseId, userId) {
+  return connection("course_log").insert({
+    user_id: userId,
+    course_id: courseId,
+  });
+}
+
+async function getPopularCourse() {
+  return connection("course_log")
+    .select("course.id", "course.id as course_id", "course.title")
+    .count("course_log.id as total_view")
+    .leftJoin("course", "course_log.course_id", "course.id")
+    .groupBy("course_log.course_id")
+    .orderBy("total_view", "DESC");
+}
+
 module.exports = {
   findOneCourse,
   createCourse,
@@ -170,4 +186,6 @@ module.exports = {
   destroyCourse,
   checkSlug,
   getAllCoursePaging,
+  createCourseLog,
+  getPopularCourse,
 };
