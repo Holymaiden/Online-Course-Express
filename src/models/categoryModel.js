@@ -47,8 +47,8 @@ async function createCategoryLog(categoryId, userId) {
   });
 }
 
-async function getPopularCategory() {
-  return connection("category_log")
+async function getPopularCategory(max) {
+  let query = connection("category_log")
     .select(
       "category.id",
       "category.id as category_id",
@@ -58,6 +58,12 @@ async function getPopularCategory() {
     .leftJoin("category", "category.id", "category_log.category_id")
     .groupBy("category_log.category_id")
     .orderBy("total_view", "DESC");
+
+  if (max > 0) {
+    query.limit(max);
+  }
+
+  return query;
 }
 
 module.exports = {

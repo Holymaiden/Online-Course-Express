@@ -21,6 +21,13 @@ const loginController = require("../src/controller/auth/login.controller");
 const registerController = require("../src/controller/auth/register.controller");
 const ScheduleAdmin = require("./admin/schedule");
 const ScheduleUser = require("./user/schedule");
+const {
+  coursePopularList,
+} = require("../src/controller/user/course.controller");
+const {
+  categoryPopularList,
+} = require("../src/controller/user/category.controller");
+
 // const authValidation = require("../src/validation/auth/auth.validation");
 const {
   authAdminMiddleware,
@@ -55,6 +62,10 @@ router.use("/userCourse", authUserMiddleware, UserCourseUser);
 router.use("/cart", authUserMiddleware, CartUser);
 router.use("/transaction", authUserMiddleware, TransactionUser);
 router.use("/schedule", authUserMiddleware, ScheduleUser);
+
+// No Auth
+router.use("/popularcourse", coursePopularList);
+router.use("/popularcategory", categoryPopularList);
 
 router.get("/", function (req, res, next) {
   console.log("Ready");

@@ -7,6 +7,5 @@ const router = express.Router();
 router.get("/", CourseController.courseList);
 router.get("/paging/list", CourseController.coursePagingList);
 router.get("/:slug", CourseController.courseDetail);
-router.get("/popular/list", CourseController.coursePopularList);
 
 module.exports = router;

@@ -39,7 +39,7 @@ categoryPagingList = async (req, res) => {
 
 categoryPopularList = async (req, res) => {
   try {
-    data = await getPopularCategory();
+    data = await getPopularCategory(req.params.max);
 
     return Response.success(res, data);
   } catch (error) {

@@ -169,11 +169,17 @@ async function createCourseLog(courseId, userId) {
 
 async function getPopularCourse() {
   return connection("course_log")
-    .select("course.id", "course.id as course_id", "course.title")
+    .select(
+      "course.id",
+      "course.id as course_id",
+      "course.title",
+      "course.description"
+    )
     .count("course_log.id as total_view")
     .leftJoin("course", "course_log.course_id", "course.id")
     .groupBy("course_log.course_id")
-    .orderBy("total_view", "DESC");
+    .orderBy("total_view", "DESC")
+    .limit(9);
 }
 
 module.exports = {
