@@ -1,4 +1,5 @@
 const { createUser } = require("../../models/userModel");
+const { createRole } = require("../../models/roleModel");
 const Response = require("../../response/response");
 const { hashingPassword } = require("../../helper/hashPassword");
 const genarateAccessToken = require("../../helper/genarateAccessToken");
@@ -23,6 +24,7 @@ const register = async (req, res) => {
           data.password = await hashingPassword(req.body.password, 10);
           data.avatar = req.file.path;
           let [user] = await createUser(data);
+          await createRole(user.id);
 
           const token = await genarateAccessToken(user);
 
@@ -40,4 +42,25 @@ const register = async (req, res) => {
     }
   }
 };
-module.exports = register;
+
+const registerPeserta = async (req, res) => {
+  try {
+    let data = req.body;
+    console.log(data);
+    data.password = await hashingPassword(req.body.password, 10);
+    let [user] = await createUser(data);
+
+    await createRole(user.id);
+
+    const token = await genarateAccessToken(user);
+
+    return Response.success(res, token);
+  } catch (error) {
+    if (error.code == "ER_DUP_ENTRY") {
+      return res.status(403).json({
+        message: "Email already registered",
+      });
+    }
+  }
+};
+module.exports = { register, registerPeserta };

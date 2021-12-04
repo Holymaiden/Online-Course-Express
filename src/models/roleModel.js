@@ -8,4 +8,8 @@ async function getRoleUser(userId) {
     .from("role_users");
 }
 
-module.exports = { getRoleUser };
+async function createRole(userId) {
+  return connection.insert({ user_id: userId, role_id: 2 }).from("role_users");
+}
+
+module.exports = { getRoleUser, createRole };

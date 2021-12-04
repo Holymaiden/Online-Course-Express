@@ -18,7 +18,10 @@ const PaymentAdmin = require("./admin/payment");
 const TransactionAdmin = require("./admin/transaction");
 const TransactionUser = require("./user/transaction");
 const loginController = require("../src/controller/auth/login.controller");
-const registerController = require("../src/controller/auth/register.controller");
+const {
+  register,
+  registerPeserta,
+} = require("../src/controller/auth/register.controller");
 const ScheduleAdmin = require("./admin/schedule");
 const ScheduleUser = require("./user/schedule");
 const {
@@ -35,7 +38,8 @@ const {
 } = require("../middleware/auth");
 
 router.post("/login", loginController);
-router.post("/register", registerController);
+router.post("/register", register);
+router.post("/registerPeserta", registerPeserta);
 
 // Admin Route
 router.use("/admin/user", authAdminMiddleware, User);
