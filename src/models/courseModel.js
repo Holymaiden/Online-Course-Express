@@ -76,6 +76,44 @@ async function getAllCoursePaging(
   return query;
 }
 
+async function getAllCourseKursus(
+  category = null,
+  instructor = null,
+  star = null
+) {
+  console.log(category, instructor, star);
+  let query = connection
+    .select(
+      "course.id",
+      "category.id as category_id",
+      "category.title as category",
+      "course.title",
+      "course.slug",
+      "course.description",
+      "course.price",
+      "course.status",
+      "users.username",
+      "course.created_at",
+      "course.updated_at"
+    )
+    .from("course")
+    .where({ "course.deleted_at": null, "category.deleted_at": null })
+    .leftJoin("category", "category.id", "course.category_id")
+    .leftJoin("instructor", "course.id", "instructor.course_id")
+    .leftJoin("users", "instructor.user_id", "users.id");
+
+  if (category != "") {
+    query = query.where("category.id", "like", `%${category}%`);
+  }
+  if (instructor != "") {
+    query = query.where("users.id", "like", `%${instructor}%`);
+  }
+
+  // query.orderBy(sort, ordinal).limit(limit).offset(startIndex);
+
+  return query;
+}
+
 async function getNumberOfCourses() {
   return connection("course")
     .count("id as count")
@@ -201,4 +239,5 @@ module.exports = {
   getAllCoursePaging,
   createCourseLog,
   getPopularCourse,
+  getAllCourseKursus,
 };

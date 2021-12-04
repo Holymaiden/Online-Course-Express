@@ -58,7 +58,7 @@ router.use("/admin/transaction", authAdminMiddleware, TransactionAdmin);
 router.use("/admin/schedule", authAdminMiddleware, ScheduleAdmin);
 
 // User Route
-router.use("/course", authUserMiddleware, Course);
+router.use("/course", Course);
 router.use("/category", authUserMiddleware, Category);
 router.use("/teachingMaterial", authUserMiddleware, TeachingMaterialUser);
 router.use("/instructor", authUserMiddleware, InstructorUser);

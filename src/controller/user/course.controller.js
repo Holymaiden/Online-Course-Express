@@ -8,6 +8,7 @@ const {
   getAllCoursePaging,
   getPopularCourse,
   createCourseLog,
+  getAllCourseKursus,
 } = require("../../models/courseModel");
 const Response = require("../../response/response");
 
@@ -37,6 +38,20 @@ coursePagingList = async (req, res) => {
       // req.query.sort,
       // req.query.ordinal,
       req.query.search
+    );
+
+    return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+courseKursusList = async (req, res) => {
+  try {
+    data = await getAllCourseKursus(
+      req.query.category,
+      req.query.instructor,
+      req.query.star
     );
 
     return Response.success(res, data);
@@ -78,4 +93,5 @@ module.exports = {
   courseDetail,
   coursePagingList,
   coursePopularList,
+  courseKursusList,
 };
