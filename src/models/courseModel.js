@@ -170,13 +170,20 @@ async function createCourseLog(courseId, userId) {
 async function getPopularCourse() {
   return connection("course_log")
     .select(
-      "course.id",
+      "course_log.id",
       "course.id as course_id",
       "course.title",
-      "course.description"
+      "course.description",
+      "course.image",
+      "course.price",
+      "category.title as category_title",
+      "users.username"
     )
     .count("course_log.id as total_view")
     .leftJoin("course", "course_log.course_id", "course.id")
+    .leftJoin("category", "course.category_id", "category.id")
+    .leftJoin("instructor", "course.id", "instructor.course_id")
+    .leftJoin("users", "instructor.user_id", "users.id")
     .groupBy("course_log.course_id")
     .orderBy("total_view", "DESC")
     .limit(9);
