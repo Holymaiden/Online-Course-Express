@@ -44,10 +44,10 @@ async function getAllCourse() {
 }
 
 async function getAllCoursePaging(
-  limit,
-  startIndex,
-  sort = "created_at",
-  ordinal = "DESC",
+  // limit,
+  // startIndex,
+  // sort = "created_at",
+  // ordinal = "DESC",
   search = null
 ) {
   let query = connection
@@ -68,10 +68,10 @@ async function getAllCoursePaging(
     .leftJoin("category", "category.id", "course.category_id");
 
   if (search != null) {
-    query = query.where("title", "like", `%${search}%`);
+    query = query.where("course.title", "like", `%${search}%`);
   }
 
-  query.orderBy(sort, ordinal).limit(limit).offset(startIndex);
+  // query.orderBy(sort, ordinal).limit(limit).offset(startIndex);
 
   return query;
 }
@@ -167,7 +167,7 @@ async function createCourseLog(courseId, userId) {
   });
 }
 
-async function getPopularCourse() {
+async function getPopularCourse(limit) {
   return connection("course_log")
     .select(
       "course_log.id",
@@ -186,7 +186,7 @@ async function getPopularCourse() {
     .leftJoin("users", "instructor.user_id", "users.id")
     .groupBy("course_log.course_id")
     .orderBy("total_view", "DESC")
-    .limit(9);
+    .limit(limit);
 }
 
 module.exports = {

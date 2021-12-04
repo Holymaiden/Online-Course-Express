@@ -29,23 +29,17 @@ courseList = async (req, res) => {
 
 coursePagingList = async (req, res) => {
   try {
-    let data = await getNumberOfCourses();
-    const paging = await paginate(req.query.page, req.query.limit, data.count);
+    // let data = await getNumberOfCourses();
+    // const paging = await paginate(req.query.page, req.query.limit, data.count);
     data = await getAllCoursePaging(
-      paging.currentPage.limit,
-      paging.currentPage.startIndex,
-      req.query.sort,
-      req.query.ordinal,
+      // paging.currentPage.limit,
+      // paging.currentPage.startIndex,
+      // req.query.sort,
+      // req.query.ordinal,
       req.query.search
     );
-    let user = await getUser(req, res);
 
-    await data.forEach(async (element) => {
-      await createCategoryLog(element.category_id, user.id);
-      await createCourseLog(element.id, user.id);
-    });
-
-    return Response.success(res, data, paging);
+    return Response.success(res, data);
   } catch (error) {
     return res.status(400).json({ err: error.message });
   }
@@ -71,7 +65,7 @@ courseDetail = async (req, res) => {
 
 coursePopularList = async (req, res) => {
   try {
-    let data = await getPopularCourse();
+    let data = await getPopularCourse(req.query.limit);
 
     return Response.success(res, data);
   } catch (error) {
