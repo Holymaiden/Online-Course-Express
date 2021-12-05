@@ -81,7 +81,6 @@ async function getAllCourseKursus(
   instructor = null,
   star = null
 ) {
-  console.log(category, instructor, star);
   let query = connection
     .select(
       "course.id",

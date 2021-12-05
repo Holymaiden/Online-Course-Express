@@ -21,7 +21,6 @@ scheduleUpdate = async (req, res) => {
   try {
     let data = req.body;
     data = await updateSchedule(req.params.dataId, data);
-    console.log(data);
 
     return Response.success(res, data);
   } catch (error) {

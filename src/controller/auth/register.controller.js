@@ -46,7 +46,6 @@ const register = async (req, res) => {
 const registerPeserta = async (req, res) => {
   try {
     let data = req.body;
-    console.log(data);
     data.password = await hashingPassword(req.body.password, 10);
     let [user] = await createUser(data);
 

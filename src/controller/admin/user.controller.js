@@ -58,7 +58,6 @@ const userUpdate = async (req, res) => {
       } else {
         try {
           const data = req.body;
-          console.log(data);
           data.password = await hashingPassword(req.body.password, 10);
           data.avatar = req.file.path;
           users = await updateUser(data, req.params.dataId);
