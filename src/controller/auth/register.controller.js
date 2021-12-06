@@ -12,6 +12,7 @@ const upload = require("../../../config/multer");
  * @param {Response} res
  * register user
  */
+
 const register = async (req, res) => {
   try {
     upload.single("avatar")(req, res, async () => {
