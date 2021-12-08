@@ -2,22 +2,11 @@ const {
   createInstructor,
   updateInstructor,
   destroyInstructor,
-  getAllInstructor,
   getNumberOfInstructors,
   getAllInstructorPaging,
 } = require("../../models/instructorModel");
 const { paginate } = require("../../helper/pagination");
 const Response = require("../../response/response");
-
-instructorList = async (req, res) => {
-  try {
-    let data = await getAllInstructor();
-
-    return Response.success(res, data);
-  } catch (error) {
-    return res.status(400).json({ err: error.message });
-  }
-};
 
 instructorPagingList = async (req, res) => {
   try {
@@ -74,7 +63,6 @@ instructorDestroy = async (req, res) => {
 module.exports = {
   instructorCreate,
   instructorUpdate,
-  instructorList,
   instructorDestroy,
   instructorPagingList,
 };

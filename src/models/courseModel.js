@@ -210,6 +210,7 @@ async function getPopularCourse(limit) {
       "course_log.id",
       "course.id as course_id",
       "course.title",
+      "course.slug",
       "course.description",
       "course.image",
       "course.price",

@@ -63,14 +63,17 @@ courseKursusList = async (req, res) => {
 courseDetail = async (req, res) => {
   try {
     let data = await findOneCourse(req.params.slug);
-    let user = await getUser(req, res);
 
     if (!data) {
       return res.status(404).json({ message: "data not found" });
     }
-
-    await createCategoryLog(data.category_id, user.id);
-    await createCourseLog(data.id, user.id);
+    if (!req.headers.authorization) {
+      let user = await getUser(req, res);
+      if (user != undefined) {
+        await createCategoryLog(data.category_id, user.id);
+        await createCourseLog(data.id, user.id);
+      }
+    }
 
     return Response.success(res, data);
   } catch (error) {

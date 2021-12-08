@@ -59,17 +59,17 @@ router.use("/admin/schedule", authAdminMiddleware, ScheduleAdmin);
 
 // User Route
 router.use("/course", Course);
-router.use("/category", authUserMiddleware, Category);
+router.use("/category", Category);
 router.use("/teachingMaterial", authUserMiddleware, TeachingMaterialUser);
-router.use("/instructor", authUserMiddleware, InstructorUser);
+router.use("/instructor", InstructorUser);
 router.use("/userCourse", authUserMiddleware, UserCourseUser);
 router.use("/cart", authUserMiddleware, CartUser);
 router.use("/transaction", authUserMiddleware, TransactionUser);
 router.use("/schedule", authUserMiddleware, ScheduleUser);
 
 // No Auth
-router.use("/popularcourse", coursePopularList);
-router.use("/popularcategory", categoryPopularList);
+router.get("/popularcourse", coursePopularList);
+router.get("/popularcategory", categoryPopularList);
 
 router.get("/", function (req, res, next) {
   console.log("Ready");
