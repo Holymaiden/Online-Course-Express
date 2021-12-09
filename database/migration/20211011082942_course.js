@@ -5,6 +5,7 @@ exports.up = function (knex) {
     table.string("title");
     table.string("slug");
     table.string("image");
+    table.text("content");
     table.text("description");
     table.integer("price");
     table.integer("status");
