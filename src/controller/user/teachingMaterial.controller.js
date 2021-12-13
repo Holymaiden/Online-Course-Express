@@ -6,6 +6,7 @@ const {
   getNumberOfTeachingMaterials,
   findOneTeachingMaterial,
   getAllTeachingMaterialPaging,
+  findTeachingMaterialBySlug,
 } = require("../../models/teachingMaterialModel");
 const Response = require("../../response/response");
 
@@ -50,13 +51,34 @@ teachingMaterialPagingList = async (req, res) => {
 teachingMaterialDetail = async (req, res) => {
   try {
     let data = await findOneTeachingMaterial(req.params.slug);
-    let user = await getUser(req, res);
 
     if (!data) {
       return res.status(404).json({ message: "data not found" });
     }
 
-    await createCategoryLog(data.category_id, user.id);
+    if (!req.headers.authorization) {
+      let user = await getUser(req, res);
+      await createCategoryLog(data.category_id, user.id);
+    }
+
+    return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+teachingMaterialDetailSlug = async (req, res) => {
+  try {
+    let data = await findTeachingMaterialBySlug(req.params.slug);
+
+    if (!data) {
+      return res.status(404).json({ message: "data not found" });
+    }
+
+    if (!req.headers.authorization) {
+      let user = await getUser(req, res);
+      await createCategoryLog(data.category_id, user.id);
+    }
 
     return Response.success(res, data);
   } catch (error) {
@@ -68,4 +90,5 @@ module.exports = {
   teachingMaterialList,
   teachingMaterialDetail,
   teachingMaterialPagingList,
+  teachingMaterialDetailSlug,
 };

@@ -28,6 +28,33 @@ async function findOneTeachingMaterial(slug) {
     .first();
 }
 
+async function findTeachingMaterialBySlug(slug) {
+  return connection
+    .select(
+      "teaching_materials.id",
+      "category.id as category_id",
+      "category.title as category",
+      "course.id as course_id",
+      "course.title as course_title",
+      "teaching_materials.title",
+      "teaching_materials.slug",
+      "teaching_materials.content",
+      "teaching_materials.description",
+      "teaching_materials.status",
+      "teaching_materials.created_at",
+      "teaching_materials.updated_at"
+    )
+    .from("teaching_materials")
+    .where({
+      "course.slug": slug,
+      "course.deleted_at": null,
+      "category.deleted_at": null,
+      "teaching_materials.deleted_at": null,
+    })
+    .leftJoin("course", "teaching_materials.course_id", "course.id")
+    .leftJoin("category", "course.category_id", "category.id");
+}
+
 async function getAllTeachingMaterial() {
   return connection
     .select(
@@ -184,4 +211,5 @@ module.exports = {
   destroyTeachingMaterial,
   checkSlug,
   getAllTeachingMaterialPaging,
+  findTeachingMaterialBySlug,
 };

@@ -60,7 +60,7 @@ router.use("/admin/schedule", authAdminMiddleware, ScheduleAdmin);
 // User Route
 router.use("/course", Course);
 router.use("/category", Category);
-router.use("/teachingMaterial", authUserMiddleware, TeachingMaterialUser);
+router.use("/teachingMaterial", TeachingMaterialUser);
 router.use("/instructor", InstructorUser);
 router.use("/userCourse", authUserMiddleware, UserCourseUser);
 router.use("/cart", authUserMiddleware, CartUser);
