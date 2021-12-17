@@ -8,7 +8,7 @@ exports.up = function (knex) {
     table.text("content");
     table.text("description");
     table.integer("price");
-    table.integer("status");
+    table.integer("status").defaultTo("2");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.datetime("updated_at").nullable();
     table.datetime("deleted_at").nullable();

@@ -7,7 +7,7 @@ exports.up = function (knex) {
     table.date("birth").nullable();
     table.string("address").nullable();
     table.string("avatar").nullable();
-    table.enu("status", ["0", "1"]).defaultTo("1");
+    table.enu("status",['0','1']).defaultTo('1');
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.datetime("updated_at").nullable();
     table.datetime("deleted_at").nullable();
