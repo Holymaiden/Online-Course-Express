@@ -56,7 +56,7 @@ teachingMaterialDetail = async (req, res) => {
       return res.status(404).json({ message: "data not found" });
     }
 
-    if (!req.headers.authorization) {
+    if (req.headers.authorization) {
       let user = await getUser(req, res);
       await createCategoryLog(data.category_id, user.id);
     }
@@ -75,7 +75,7 @@ teachingMaterialDetailSlug = async (req, res) => {
       return res.status(404).json({ message: "data not found" });
     }
 
-    if (!req.headers.authorization) {
+    if (req.headers.authorization) {
       let user = await getUser(req, res);
       await createCategoryLog(data.category_id, user.id);
     }
