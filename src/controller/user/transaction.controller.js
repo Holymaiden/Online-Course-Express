@@ -1,4 +1,7 @@
-const { findTransactionUser } = require("../../models/transactionModel");
+const {
+  findTransactionUser,
+  paymentTransactionUser,
+} = require("../../models/transactionModel");
 const { getUser } = require("../../../middleware/auth");
 
 const Response = require("../../response/response");
@@ -18,6 +21,25 @@ transactionUser = async (req, res) => {
   }
 };
 
+transactionPaymentUser = async (req, res) => {
+  const datas = req.body;
+  try {
+    if (!datas.account_number && !datas.phone) {
+      return res.status(404).json({ message: "transaction payment error" });
+    }
+    let user = await getUser(req, res);
+    let data = await paymentTransactionUser(datas, user.id);
+
+    if (data == undefined) {
+      return res.status(404).json({ message: "transaction payment error" });
+    }
+    return Response.success(res, data);
+  } catch (error) {
+    return Response.error(res, data);
+  }
+};
+
 module.exports = {
   transactionUser,
+  transactionPaymentUser,
 };

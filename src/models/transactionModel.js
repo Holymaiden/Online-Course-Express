@@ -189,6 +189,44 @@ async function destroyTransaction(id) {
     });
 }
 
+async function paymentTransactionUser(data, ids) {
+  return connection
+    .insert({
+      user_id: ids,
+      course_id: data.course_id,
+      price: data.price,
+    })
+    .from("cart")
+    .then(function (id) {
+      if (data.name) {
+        return connection
+          .insert({
+            cart_id: id,
+            name: data.name,
+            account_number: data.number,
+            bank: data.bank,
+          })
+          .from("payment");
+      } else {
+        return connection
+          .insert({
+            cart_id: id,
+            phone: data.phone,
+          })
+          .from("payment");
+      }
+    })
+    .then(function (id) {
+      return connection
+        .insert({
+          user_id: ids,
+          course_id: data.course_id,
+          payment_id: id,
+        })
+        .from("transaction");
+    });
+}
+
 module.exports = {
   findOneTransaction,
   findTransactionUser,
@@ -198,4 +236,5 @@ module.exports = {
   updateTransaction,
   destroyTransaction,
   getAllTransactionPaging,
+  paymentTransactionUser,
 };
