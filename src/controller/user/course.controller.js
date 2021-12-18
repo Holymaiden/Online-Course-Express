@@ -69,7 +69,6 @@ courseDetail = async (req, res) => {
     }
     if (req.headers.authorization) {
       let user = await getUser(req, res);
-      console.log(user);
       if (user != undefined) {
         await createCategoryLog(data.category_id, user.id);
         await createCourseLog(data.id, user.id);
