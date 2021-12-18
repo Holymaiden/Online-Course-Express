@@ -1,0 +1,23 @@
+const connection = require("../../config/database");
+
+async function findOneDiscountByUser(code, id) {
+  return connection
+    .select(
+      "discount.id",
+      "discount.code",
+      "discount.discount",
+      "discount.persentase",
+      "discount.created_at",
+      "discount.deleted_at"
+    )
+    .from("discount")
+    .where({
+      "discount.code": code,
+      "users.id": id,
+      "users.deleted_at": null,
+    })
+    .leftJoin("users", "discount.user_id", "users.id")
+    .first();
+}
+
+module.exports = { findOneDiscountByUser };

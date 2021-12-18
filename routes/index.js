@@ -17,6 +17,7 @@ const CartUser = require("./user/cart");
 const PaymentAdmin = require("./admin/payment");
 const TransactionAdmin = require("./admin/transaction");
 const TransactionUser = require("./user/transaction");
+const DiscountUser = require("./user/discount");
 const loginController = require("../src/controller/auth/login.controller");
 const {
   register,
@@ -66,6 +67,7 @@ router.use("/userCourse", authUserMiddleware, UserCourseUser);
 router.use("/cart", authUserMiddleware, CartUser);
 router.use("/transaction", authUserMiddleware, TransactionUser);
 router.use("/schedule", authUserMiddleware, ScheduleUser);
+router.use("/discount", authUserMiddleware, DiscountUser);
 
 // No Auth
 router.get("/popularcourse", coursePopularList);
