@@ -6,6 +6,6 @@ const {
 const router = express.Router();
 
 /* GET discount listing. */
-router.get("/by/users", discountByUser);
+router.get("/by/users/:kode", discountByUser);
 
 module.exports = router;
