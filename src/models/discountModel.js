@@ -20,4 +20,11 @@ async function findOneDiscountByUser(code, id) {
     .first();
 }
 
-module.exports = { findOneDiscountByUser };
+async function UseDiscount(id) {
+  return connection
+    .from("discount")
+    .where({ id: id })
+    .update({ deleted_at: new Date() });
+}
+
+module.exports = { findOneDiscountByUser, UseDiscount };

@@ -2,6 +2,7 @@ const {
   findTransactionUser,
   paymentTransactionUser,
 } = require("../../models/transactionModel");
+const { UseDiscount } = require("../../models/discountModel");
 const { getUser } = require("../../../middleware/auth");
 
 const Response = require("../../response/response");
@@ -33,6 +34,11 @@ transactionPaymentUser = async (req, res) => {
     if (data == undefined) {
       return Response.error(res, data);
     }
+
+    if (datas.discount) {
+      await UseDiscount(datas.discount);
+    }
+
     return Response.success(res, data);
   } catch (error) {
     return Response.error(res, data);
