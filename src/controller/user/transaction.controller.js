@@ -25,13 +25,13 @@ transactionPaymentUser = async (req, res) => {
   const datas = req.body;
   try {
     if (!datas.account_number && !datas.phone) {
-      return res.status(404).json({ message: "transaction payment error" });
+      return Response.error(res, data);
     }
     let user = await getUser(req, res);
     let data = await paymentTransactionUser(datas, user.id);
 
     if (data == undefined) {
-      return res.status(404).json({ message: "transaction payment error" });
+      return Response.error(res, data);
     }
     return Response.success(res, data);
   } catch (error) {
