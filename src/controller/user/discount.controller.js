@@ -2,6 +2,7 @@ const { getUser } = require("../../../middleware/auth");
 
 const { findOneDiscountByUser } = require("../../models/discountModel");
 const Response = require("../../response/response");
+const isEmpty = require("../../helper/isEmpty");
 
 discountByUser = async (req, res) => {
   try {
@@ -9,7 +10,7 @@ discountByUser = async (req, res) => {
     let user = await getUser(req, res);
     let data = await findOneDiscountByUser(code, user.id);
 
-    if (data == undefined) {
+    if (isEmpty(data)) {
       return Response.error(res, data);
     }
 
