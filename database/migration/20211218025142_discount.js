@@ -5,6 +5,7 @@ exports.up = function (knex) {
     table.string("code", 50);
     table.string("discount", 50);
     table.double("persentase").notNullable();
+    table.date("expired").notNullable();
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.datetime("deleted_at").nullable();
 
