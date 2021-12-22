@@ -6,6 +6,7 @@ const {
   getNumberOfUserCourses,
 } = require("../../models/userCourseModel");
 const Response = require("../../response/response");
+const isEmpty = require("../../helper/isEmpty");
 
 userCourseListByUser = async (req, res) => {
   try {
@@ -20,6 +21,10 @@ userCourseListByUser = async (req, res) => {
       req.query.search,
       user.id
     );
+
+    if (isEmpty(data)) {
+      return Response.notFound(res, data);
+    }
 
     return Response.success(res, data, paging);
   } catch (error) {

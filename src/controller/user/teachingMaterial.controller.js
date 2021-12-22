@@ -7,8 +7,10 @@ const {
   findOneTeachingMaterial,
   getAllTeachingMaterialPaging,
   findTeachingMaterialBySlug,
+  checkIfHave,
 } = require("../../models/teachingMaterialModel");
 const Response = require("../../response/response");
+const isEmpty = require("../../helper/isEmpty");
 
 teachingMaterialList = async (req, res) => {
   try {
@@ -71,7 +73,7 @@ teachingMaterialDetailSlug = async (req, res) => {
   try {
     let data = await findTeachingMaterialBySlug(req.params.slug);
 
-    if (!data) {
+    if (isEmpty(data)) {
       return res.status(404).json({ message: "data not found" });
     }
 
@@ -86,9 +88,25 @@ teachingMaterialDetailSlug = async (req, res) => {
   }
 };
 
+teachingMaterialExist = async (req, res) => {
+  try {
+    let user = await getUser(req, res);
+    let data = await checkIfHave(user.id, req.params.slug);
+
+    if (isEmpty(data)) {
+      return Response.notFound(res, "Course Tidak Ditemukan");
+    }
+
+    return Response.success(res, data);
+  } catch (error) {
+    return Response.error(res, { err: error.message });
+  }
+};
+
 module.exports = {
   teachingMaterialList,
   teachingMaterialDetail,
   teachingMaterialPagingList,
   teachingMaterialDetailSlug,
+  teachingMaterialExist,
 };

@@ -10,6 +10,8 @@ const {
   createCourseLog,
   getAllCourseKursus,
 } = require("../../models/courseModel");
+const isEmpty = require("../../helper/isEmpty");
+
 const Response = require("../../response/response");
 
 courseList = async (req, res) => {

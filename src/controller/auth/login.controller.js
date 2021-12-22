@@ -21,7 +21,6 @@ async function login(req, res) {
     const result = await comparePassword(req.body.password, user.password);
     user.role = await getRoleUser(user.id);
     delete user.password;
-
     if (!result) {
       return res.status(401).json({
         error: "Incorrect password!",

@@ -38,6 +38,8 @@ const {
   authUserMiddleware,
 } = require("../middleware/auth");
 
+const { checkCourse } = require("../src/controller/user/userCourse.controller");
+
 router.post("/login", loginController);
 router.post("/register", register);
 router.post("/registerPeserta", registerPeserta);
@@ -63,7 +65,7 @@ router.use("/course", Course);
 router.use("/category", Category);
 router.use("/teachingMaterial", TeachingMaterialUser);
 router.use("/instructor", InstructorUser);
-router.use("/userCourse", authUserMiddleware, UserCourseUser);
+router.use("/userCourse", UserCourseUser);
 router.use("/cart", authUserMiddleware, CartUser);
 router.use("/transaction", authUserMiddleware, TransactionUser);
 router.use("/schedule", authUserMiddleware, ScheduleUser);

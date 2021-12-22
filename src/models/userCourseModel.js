@@ -100,33 +100,11 @@ async function getNumberOfUserCourses() {
     .first();
 }
 
-async function createUserCourse(data) {
-  return connection("user_course")
-    .insert({
-      data,
-    })
-    .then(function (id) {
-      return connection
-        .select(
-          "user_course.id",
-          "users.id as user_id",
-          "users.username",
-          "users.email",
-          "users.avatar",
-          "course.id as course_id",
-          "course.title as course",
-          "course.slug",
-          "course.status",
-          "user_course.created_at",
-          "user_course.updated_at"
-        )
-        .from("user_course")
-        .leftJoin("course", "user_course.course_id", "course.id")
-        .leftJoin("users", "user_course.user_id", "users.id")
-        .where({
-          "user_course.id": id,
-        });
-    });
+async function createUserCourse(id, course) {
+  return connection("user_course").insert({
+    user_id: id,
+    course_id: course,
+  });
 }
 
 async function updateUserCourse(id, data) {

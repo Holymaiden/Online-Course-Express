@@ -49,7 +49,6 @@ async function authMiddleware(role, req, res) {
     }
 
     let authorized = false;
-
     decode.data.role.forEach((element) => {
       if (element.role_name == role) {
         authorized = true;

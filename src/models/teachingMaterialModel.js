@@ -202,6 +202,17 @@ async function checkSlug(slug) {
     .where("slug", "like", `%${slug}%`);
 }
 
+async function checkIfHave(id, slug) {
+  return connection
+    .select("user_course.course_id", "user_course.user_id")
+    .from("user_course")
+    .leftJoin("course", "user_course.course_id", "course.id")
+    .where({
+      "course.slug": slug,
+      "user_course.user_id": id,
+      "user_course.deleted_at": null,
+    });
+}
 module.exports = {
   findOneTeachingMaterial,
   createTeachingMaterial,
@@ -212,4 +223,5 @@ module.exports = {
   checkSlug,
   getAllTeachingMaterialPaging,
   findTeachingMaterialBySlug,
+  checkIfHave,
 };
