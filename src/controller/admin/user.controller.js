@@ -59,7 +59,7 @@ const userUpdate = async (req, res) => {
         try {
           const data = req.body;
           data.password = await hashingPassword(req.body.password, 10);
-          data.avatar = req.file.path;
+          data.avatar = "/" + req.file.path.slice(45, 76).replace("\\", "/");
           users = await updateUser(data, req.params.dataId);
 
           return Response.success(res, users);

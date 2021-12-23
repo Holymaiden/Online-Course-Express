@@ -19,7 +19,7 @@ function checkFileType(file, cb) {
 
 // Set The Storage Engine
 const storage = multer.diskStorage({
-  destination: "./public/avatar/",
+  destination: "../../react-js/Online-Course-React-JS/public/avatar/",
   filename: function (req, file, cb) {
     cb(
       null,

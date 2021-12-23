@@ -23,7 +23,7 @@ const register = async (req, res) => {
         try {
           let data = req.body;
           data.password = await hashingPassword(req.body.password, 10);
-          data.avatar = req.file.path;
+          data.avatar = "/" + req.file.path.slice(45, 76).replace("\\", "/");
           let [user] = await createUser(data);
           await createRole(user.id);
 
