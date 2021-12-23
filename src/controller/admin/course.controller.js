@@ -9,6 +9,8 @@ const {
 const slug = require("slug");
 const { paginate } = require("../../helper/pagination");
 const Response = require("../../response/response");
+const courseValidation = require("../../../src/validation/admin/course.validation");
+const upload = require("../../../config/multer-image");
 
 courseList = async (req, res) => {
   try {
@@ -34,16 +36,32 @@ courseList = async (req, res) => {
 
 courseCreate = async (req, res) => {
   try {
-    let data = req.body;
-    //   data.image = uploadResponse.secure_url;
-    data.slug = slug(req.body.title);
-    let slugData = await checkSlug(data.slug);
-    data.slug = `${data.slug}-${slugData.length}`;
-    data = await createCourse(data);
-    return Response.success(res, data);
-    // });
+    upload.single("image")(req, res, async () => {
+      courseValidation(req, res);
+      if (req.file == undefined) {
+        return res.status(400).json({ message: "no file selected" });
+      } else {
+        try {
+          let data = req.body;
+          //   data.image = uploadResponse.secure_url;
+          data.slug = slug(req.body.title);
+          let slugData = await checkSlug(data.slug);
+          data.slug = `${data.slug}-${slugData.length}`;
+          data.image = "/" + req.file.path.slice(45, 76).replace("\\", "/");
+          data = await createCourse(data);
+          return Response.success(res, data);
+          // });
+        } catch (error) {
+          return res.status(400).json({ err: error });
+        }
+      }
+    });
   } catch (error) {
-    return res.status(400).json({ err: error });
+    if (error.code == "ER_DUP_ENTRY") {
+      return res.status(403).json({
+        message: "Course already registered",
+      });
+    }
   }
 };
 
