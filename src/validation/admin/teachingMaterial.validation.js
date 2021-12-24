@@ -3,8 +3,6 @@ const joi = require("joi");
 const validation = joi.object({
   course_id: joi.number().required(),
   title: joi.string().required(),
-  content: joi.string().required(),
-  description: joi.string().required(),
 });
 
 const teachingMaterialValidation = (req, res, next) => {
@@ -12,8 +10,6 @@ const teachingMaterialValidation = (req, res, next) => {
     const validationResult = validation.validate({
       course_id: req.body.course_id,
       title: req.body.title,
-      content: req.body.content,
-      description: req.body.description,
     });
 
     console.log(validationResult.error);

@@ -134,6 +134,7 @@ async function createTeachingMaterial(data) {
       course_id: data.course_id,
       title: data.title,
       content: data.content,
+      slug: data.slug,
       description: data.description,
     })
     .then(function (id) {
@@ -168,9 +169,11 @@ async function updateTeachingMaterial(id, data) {
   return connection("teaching_materials").where("id", id).update({
     course_id: data.course_id,
     title: data.title,
+    slug: data.slug,
     content: data.content,
     description: data.description,
     status: data.status,
+    updated_at: new Date(),
   });
 }
 

@@ -8,6 +8,7 @@ const slug = require("slug");
 const Response = require("../../response/response");
 const upload = require("../../../config/multer-video");
 const teachingMaterialValidation = require("../../../src/validation/admin/teachingMaterial.validation");
+const Bytes = require("../../helper/formatBytes");
 
 teachingMaterialCreate = async (req, res) => {
   try {
@@ -18,9 +19,10 @@ teachingMaterialCreate = async (req, res) => {
       } else {
         try {
           let data = req.body;
-          data.slug = slug(req.body.title);
+          data.slug = slug(data.title);
           let slugData = await checkSlug(data.slug);
           data.slug = `${data.slug}-${slugData.length}`;
+          data.description = Bytes(req.file.size);
           data.content = "/" + req.file.path.slice(45, 76).replace("\\", "/");
           data = await createTeachingMaterial(data);
 
@@ -37,27 +39,27 @@ teachingMaterialCreate = async (req, res) => {
 
 teachingMaterialUpdate = async (req, res) => {
   try {
-    // upload.single("file")(req, res, async () => {
-    let data = req.body;
-    // let uploadResponse;
+    upload.single("video")(req, res, async () => {
+      if (req.file == undefined) {
+        return res.status(400).json({ message: "no file selected" });
+      } else {
+        try {
+          let data = req.body;
+          data.slug = slug(req.body.title);
+          let slugData = await checkSlug(data.slug);
+          data.slug = `${data.slug}-${slugData.length}`;
+          data.description = Bytes(req.file.size);
+          data.content = "/" + req.file.path.slice(45, 76).replace("\\", "/");
+          await updateTeachingMaterial(req.params.dataId, data);
 
-    //   if (req.file != undefined) {
-    //     uploadResponse = await cloudinary.uploader.upload(req.file.path, {
-    //       folder: "teachingMaterial",
-    //     });
-    //     data.image = uploadResponse.secure_url;
-    //   }
-
-    data.slug = slug(req.body.title);
-    let slugData = await checkSlug(data.slug);
-    data.slug = `${data.slug}-${slugData.length}`;
-    data.updated_at = new Date();
-    await updateTeachingMaterial(req.params.dataId, data);
-
-    return Response.success(res, data);
-    // });
+          return Response.success(res, data);
+        } catch (error) {
+          return res.status(400).json({ err: error });
+        }
+      }
+    });
   } catch (error) {
-    return res.status(400).json({ err: error });
+    return Response.error(res, "intinya error");
   }
 };
 
