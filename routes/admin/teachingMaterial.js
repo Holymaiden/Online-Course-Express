@@ -5,10 +5,9 @@ const {
   teachingMaterialUpdate,
   teachingMaterialDestroy,
 } = require("../../src/controller/admin/teachingMaterial.controller");
-const teachingMaterialValidation = require("../../src/validation/admin/teachingMaterial.validation");
 
-router.post("/", teachingMaterialValidation, teachingMaterialCreate);
-router.put("/:dataId", teachingMaterialValidation, teachingMaterialUpdate);
+router.post("/", teachingMaterialCreate);
+router.put("/:dataId", teachingMaterialUpdate);
 router.put("/destroy/:dataId", teachingMaterialDestroy);
 
 module.exports = router;

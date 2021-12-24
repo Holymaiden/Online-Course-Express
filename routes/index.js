@@ -48,11 +48,7 @@ router.post("/registerPeserta", registerPeserta);
 router.use("/admin/user", authAdminMiddleware, User);
 router.use("/admin/course", authAdminMiddleware, AdminCourse);
 router.use("/admin/summary", authAdminMiddleware, Summary);
-router.use(
-  "/admin/teachingMaterial",
-  authAdminMiddleware,
-  TeachingMaterialAdmin
-);
+router.use("/admin/teachingMaterial", TeachingMaterialAdmin);
 router.use("/admin/instructor", authAdminMiddleware, InstructorAdmin);
 router.use("/admin/userCourse", authAdminMiddleware, UserCourseAdmin);
 router.use("/admin/cart", authAdminMiddleware, CartAdmin);

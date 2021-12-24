@@ -6,18 +6,32 @@ const {
 } = require("../../models/teachingMaterialModel");
 const slug = require("slug");
 const Response = require("../../response/response");
+const upload = require("../../../config/multer-video");
+const teachingMaterialValidation = require("../../../src/validation/admin/teachingMaterial.validation");
 
 teachingMaterialCreate = async (req, res) => {
   try {
-    let data = req.body;
-    data.slug = slug(req.body.title);
-    let slugData = await checkSlug(data.slug);
-    data.slug = `${data.slug}-${slugData.length}`;
-    data = await createTeachingMaterial(data);
+    upload.single("video")(req, res, async () => {
+      teachingMaterialValidation(req, res);
+      if (req.file == undefined) {
+        return res.status(400).json({ message: "no file selected" });
+      } else {
+        try {
+          let data = req.body;
+          data.slug = slug(req.body.title);
+          let slugData = await checkSlug(data.slug);
+          data.slug = `${data.slug}-${slugData.length}`;
+          data.content = "/" + req.file.path.slice(45, 76).replace("\\", "/");
+          data = await createTeachingMaterial(data);
 
-    return Response.success(res, data);
+          return Response.success(res, data);
+        } catch (error) {
+          return res.status(400).json({ err: error });
+        }
+      }
+    });
   } catch (error) {
-    return res.status(400).json({ err: error });
+    return Response.error(res, "intinya error");
   }
 };
 
