@@ -18,6 +18,7 @@ async function login(req, res) {
         error: "User not found!",
       });
     }
+
     const result = await comparePassword(req.body.password, user.password);
     user.role = await getRoleUser(user.id);
     delete user.password;

@@ -2,7 +2,16 @@ const connection = require("../../config/database");
 
 async function findOneUser(username) {
   return connection
-    .select("id", "username", "email", "avatar", "password","birth","address","status")
+    .select(
+      "id",
+      "username",
+      "email",
+      "avatar",
+      "password",
+      "birth",
+      "address",
+      "status"
+    )
     .from("users")
     .where({
       username: username,
@@ -13,7 +22,7 @@ async function findOneUser(username) {
 
 async function getAllUser() {
   return connection
-    .select("id", "username", "email", "avatar","birth","address","status")
+    .select("id", "username", "email", "avatar", "birth", "address", "status")
     .from("users")
     .where({ deleted_at: null });
 }
@@ -26,7 +35,7 @@ async function getAllUserPaging(
   search = null
 ) {
   let query = connection
-    .select("id", "username", "email", "avatar","birth","address","status")
+    .select("id", "username", "email", "avatar", "birth", "address", "status")
     .from("users")
     .where({ deleted_at: null });
 
@@ -59,7 +68,16 @@ async function createUser(data) {
     .then(function (id) {
       connection.insert({ user_id: id, role_id: 2 }).from("role_users");
       return connection
-        .select("id", "username", "email", "avatar","birth","address","status", "created_at")
+        .select(
+          "id",
+          "username",
+          "email",
+          "avatar",
+          "birth",
+          "address",
+          "status",
+          "created_at"
+        )
         .from("users")
         .where("id", id[0]);
     });
@@ -81,7 +99,16 @@ async function updateUser(data, dataId) {
     .where({ id: dataId, deleted_at: null })
     .then(function () {
       return connection
-        .select("id", "username", "email", "avatar","birth","address","status", "created_at")
+        .select(
+          "id",
+          "username",
+          "email",
+          "avatar",
+          "birth",
+          "address",
+          "status",
+          "created_at"
+        )
         .from("users")
         .where("id", dataId);
     });
@@ -96,6 +123,18 @@ async function destroyUser(dataId) {
     .where("id", dataId);
 }
 
+async function updateUserProfle(data, dataId) {
+  return connection
+    .update({
+      username: data.username,
+      birth: data.birth,
+      address: data.address,
+      updated_at: new Date(),
+    })
+    .from("users")
+    .where({ id: dataId, deleted_at: null });
+}
+
 module.exports = {
   findOneUser,
   createUser,
@@ -104,4 +143,5 @@ module.exports = {
   destroyUser,
   updateUser,
   getAllUserPaging,
+  updateUserProfle,
 };

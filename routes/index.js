@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const User = require("./admin/users");
+const userUser = require("./user/users");
 const AdminCourse = require("./admin/course");
 const Summary = require("./admin/summary");
 const Course = require("./user/course");
@@ -66,6 +67,7 @@ router.use("/cart", authUserMiddleware, CartUser);
 router.use("/transaction", authUserMiddleware, TransactionUser);
 router.use("/schedule", authUserMiddleware, ScheduleUser);
 router.use("/discount", authUserMiddleware, DiscountUser);
+router.use("/users", authUserMiddleware, userUser);
 
 // No Auth
 router.get("/popularcourse", coursePopularList);
