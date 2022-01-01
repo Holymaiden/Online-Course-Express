@@ -132,7 +132,22 @@ async function updateUserProfle(data, dataId) {
       updated_at: new Date(),
     })
     .from("users")
-    .where({ id: dataId, deleted_at: null });
+    .where({ id: dataId, deleted_at: null })
+    .then(function () {
+      return connection
+        .select(
+          "id",
+          "username",
+          "email",
+          "avatar",
+          "birth",
+          "address",
+          "status"
+        )
+        .from("users")
+        .where("id", dataId)
+        .first();
+    });
 }
 
 module.exports = {
