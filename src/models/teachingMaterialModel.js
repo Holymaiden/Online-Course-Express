@@ -216,6 +216,37 @@ async function checkIfHave(id, slug) {
       "user_course.deleted_at": null,
     });
 }
+
+async function getNumberOfTeachingMaterialsCom(dataId) {
+  return connection("teaching_materials")
+    .leftJoin("course", "teaching_materials.course_id", "course.id")
+    .leftJoin("instructor", "course.id", "instructor.course_id")
+    .count("teaching_materials.id as count")
+    .where({
+      "instructor.deleted_at": null,
+      "instructor.user_id": dataId,
+      "teaching_materials.deleted_at": null,
+      "course.deleted_at": null,
+      "teaching_materials.status": "1",
+    })
+    .first();
+}
+
+async function getNumberOfTeachingMaterialsPen(dataId) {
+  return connection("teaching_materials")
+    .leftJoin("course", "teaching_materials.course_id", "course.id")
+    .leftJoin("instructor", "course.id", "instructor.course_id")
+    .count("teaching_materials.id as count")
+    .where({
+      "instructor.deleted_at": null,
+      "instructor.user_id": dataId,
+      "teaching_materials.deleted_at": null,
+      "course.deleted_at": null,
+      "teaching_materials.status": "2",
+    })
+    .first();
+}
+
 module.exports = {
   findOneTeachingMaterial,
   createTeachingMaterial,
@@ -227,4 +258,6 @@ module.exports = {
   getAllTeachingMaterialPaging,
   findTeachingMaterialBySlug,
   checkIfHave,
+  getNumberOfTeachingMaterialsCom,
+  getNumberOfTeachingMaterialsPen,
 };

@@ -8,6 +8,8 @@ const {
   getAllTeachingMaterialPaging,
   findTeachingMaterialBySlug,
   checkIfHave,
+  getNumberOfTeachingMaterialsCom,
+  getNumberOfTeachingMaterialsPen,
 } = require("../../models/teachingMaterialModel");
 const Response = require("../../response/response");
 const isEmpty = require("../../helper/isEmpty");
@@ -103,10 +105,42 @@ teachingMaterialExist = async (req, res) => {
   }
 };
 
+teachingMaterialCom = async (req, res) => {
+  try {
+    let user = await getUser(req, res);
+    let data = await getNumberOfTeachingMaterialsCom(user.id);
+
+    if (isEmpty(data)) {
+      return Response.notFound(res, "Data Tidak Ditemukan");
+    }
+
+    return Response.success(res, data);
+  } catch (error) {
+    return Response.error(res, { err: error.message });
+  }
+};
+
+teachingMaterialPen = async (req, res) => {
+  try {
+    let user = await getUser(req, res);
+    let data = await getNumberOfTeachingMaterialsPen(user.id);
+
+    if (isEmpty(data)) {
+      return Response.notFound(res, "Data Tidak Ditemukan");
+    }
+
+    return Response.success(res, data);
+  } catch (error) {
+    return Response.error(res, { err: error.message });
+  }
+};
+
 module.exports = {
   teachingMaterialList,
   teachingMaterialDetail,
   teachingMaterialPagingList,
   teachingMaterialDetailSlug,
   teachingMaterialExist,
+  teachingMaterialCom,
+  teachingMaterialPen,
 };
