@@ -150,6 +150,31 @@ async function updateUserProfle(data, dataId) {
     });
 }
 
+async function updateUserEmail(data, dataId) {
+  return connection
+    .update({
+      email: data.email,
+      updated_at: new Date(),
+    })
+    .from("users")
+    .where({ id: dataId, deleted_at: null })
+    .then(function () {
+      return connection
+        .select(
+          "id",
+          "username",
+          "email",
+          "avatar",
+          "birth",
+          "address",
+          "status"
+        )
+        .from("users")
+        .where("id", dataId)
+        .first();
+    });
+}
+
 module.exports = {
   findOneUser,
   createUser,
@@ -159,4 +184,5 @@ module.exports = {
   updateUser,
   getAllUserPaging,
   updateUserProfle,
+  updateUserEmail,
 };
