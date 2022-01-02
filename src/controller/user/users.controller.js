@@ -1,8 +1,13 @@
-const { updateUserProfle, updateUserEmail } = require("../../models/userModel");
+const {
+  updateUserProfle,
+  updateUserEmail,
+  updateUserPassword,
+} = require("../../models/userModel");
 const Response = require("../../response/response");
 const { getUser } = require("../../../middleware/auth");
 const { getRoleUser } = require("../../models/roleModel");
 const genarateAccessToken = require("../../helper/genarateAccessToken");
+const { hashingPassword } = require("../../helper/hashPassword");
 
 const isEmpty = require("../../helper/isEmpty");
 
@@ -42,4 +47,20 @@ const userEmailUpdate = async (req, res) => {
   }
 };
 
-module.exports = { userProfileUpdate, userEmailUpdate };
+const userPasswordUpdate = async (req, res) => {
+  try {
+    const data = req.body;
+    let user = await getUser(req, res);
+    data.password = await hashingPassword(req.body.password, 10);
+    let users = await updateUserPassword(data, user.id);
+    if (isEmpty(users)) {
+      return Response.notFound(res, "User Tidak Ditemukan");
+    }
+
+    return Response.success(res, users);
+  } catch (error) {
+    return Response.error(res, { err: error.message });
+  }
+};
+
+module.exports = { userProfileUpdate, userEmailUpdate, userPasswordUpdate };
