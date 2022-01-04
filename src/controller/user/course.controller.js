@@ -69,7 +69,7 @@ courseDetail = async (req, res) => {
     if (!data) {
       return res.status(404).json({ message: "data not found" });
     }
-    if (req.headers.authorization) {
+    if (req.headers.authorization == true) {
       let user = await getUser(req, res);
       if (user != undefined) {
         await createCategoryLog(data.category_id, user.id);
