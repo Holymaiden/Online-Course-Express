@@ -7,6 +7,8 @@ const {
   updateTransaction,
   getAllTransactionPaging,
 } = require("../../models/transactionModel");
+const { createUserCourse } = require("../../models/userCourseModel");
+
 const { paginate } = require("../../helper/pagination");
 const Response = require("../../response/response");
 
@@ -66,10 +68,14 @@ transactionCreate = async (req, res) => {
 transactionUpdate = async (req, res) => {
   try {
     let data = req.body;
-    data.updated_at = new Date();
-    await updateTransaction(req.params.dataId, data);
 
-    return Response.success(res, data);
+    let datas = await updateTransaction(req.params.dataId, data);
+
+    if (datas.status == "Payed") {
+      await createUserCourse(data.user_id, data.course_id);
+    }
+
+    return Response.success(res, datas);
   } catch (error) {
     return res.status(400).json({ err: error });
   }

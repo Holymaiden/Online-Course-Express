@@ -39,7 +39,7 @@ transactionPaymentUser = async (req, res) => {
     if (datas.discount) {
       await UseDiscount(datas.discount);
     }
-    await createUserCourse(user.id, datas.course_id);
+    // await createUserCourse(user.id, datas.course_id);
     return Response.success(res, data);
   } catch (error) {
     return Response.error(res, data);

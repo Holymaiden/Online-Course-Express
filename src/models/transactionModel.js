@@ -10,9 +10,9 @@ async function findOneTransaction(dataId) {
       "course.id as course_id",
       "course.title as course",
       "course.slug",
-      "course.status",
       "payment.id as payment_id",
       "payment.name as payment",
+      "transaction.status",
       "payment.account_number",
       "transaction.created_at",
       "transaction.updated_at"
@@ -39,7 +39,7 @@ async function findTransactionUser(dataId, slug) {
       "course.id as course_id",
       "course.title as course",
       "course.slug",
-      "course.status",
+      "transaction.status",
       "transaction.created_at",
       "transaction.updated_at"
     )
@@ -64,7 +64,7 @@ async function getAllTransaction() {
       "course.id as course_id",
       "course.title as course",
       "course.slug",
-      "course.status",
+      "transaction.status",
       "payment.id as payment_id",
       "payment.name as payment",
       "payment.account_number",
@@ -99,7 +99,7 @@ async function getAllTransactionPaging(
       "course.id as course_id",
       "course.title as course",
       "course.slug",
-      "course.status",
+      "transaction.status",
       "payment.id as payment_id",
       "payment.name as payment",
       "payment.account_number",
@@ -148,7 +148,7 @@ async function createTransaction(data) {
           "course.id as course_id",
           "course.title as course",
           "course.slug",
-          "course.status",
+          "transaction.status",
           "payment.id as payment_id",
           "payment.name as payment",
           "payment.account_number",
@@ -170,12 +170,25 @@ async function createTransaction(data) {
 }
 
 async function updateTransaction(id, data) {
-  return connection("transaction").where("id", id).update({
-    user_id: data.user_id,
-    course_id: data.course_id,
-    payment_id: data.payment_id,
-    updated_at: new Date(),
-  });
+  return connection("transaction")
+    .where("id", id)
+    .update({
+      user_id: data.user_id,
+      course_id: data.course_id,
+      payment_id: data.payment_id,
+      status: data.status,
+      updated_at: new Date(),
+    })
+    .then(function () {
+      return connection
+        .select("status")
+        .from("transaction")
+        .where({
+          id: id,
+          deleted_at: null,
+        })
+        .first();
+    });
 }
 
 async function destroyTransaction(id) {
@@ -203,7 +216,7 @@ async function paymentTransactionUser(data, ids) {
           .insert({
             cart_id: id,
             name: data.name,
-            account_number: data.number,
+            account_number: data.account_number,
             bank: data.bank,
           })
           .from("payment");
