@@ -13,6 +13,7 @@ const Response = require("../../response/response");
 paymentList = async (req, res) => {
   try {
     let data = await getAllPayment();
+    console.log(data);
 
     return Response.success(res, data);
   } catch (error) {

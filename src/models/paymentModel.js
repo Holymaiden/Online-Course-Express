@@ -2,7 +2,15 @@ const connection = require("../../config/database");
 
 async function findOnePayment(dataId) {
   return connection
-    .select("id", "name", "account_number", "created_at", "updated_at")
+    .select(
+      "id",
+      "name",
+      "account_number",
+      "bank",
+      "phone",
+      "created_at",
+      "updated_at"
+    )
     .from("payment")
     .where({
       "payment.id": dataId,
@@ -12,7 +20,15 @@ async function findOnePayment(dataId) {
 
 async function getAllPayment() {
   return connection
-    .select("id", "name", "account_number", "created_at", "updated_at")
+    .select(
+      "id",
+      "name",
+      "account_number",
+      "bank",
+      "phone",
+      "created_at",
+      "updated_at"
+    )
     .from("payment")
     .where({ deleted_at: null });
 }
@@ -25,7 +41,15 @@ async function getAllPaymentPaging(
   search = null
 ) {
   let query = connection
-    .select("id", "name", "account_number", "created_at", "updated_at")
+    .select(
+      "id",
+      "name",
+      "account_number",
+      "bank",
+      "phone",
+      "created_at",
+      "updated_at"
+    )
     .from("payment")
     .where({ deleted_at: null });
 
@@ -53,20 +77,18 @@ async function createPayment(data) {
     })
     .then(function (id) {
       return connection
-        .select("id", "name", "account_number", "created_at")
+        .select("id", "name", "account_number", "bank", "phone", "created_at")
         .from("payment")
         .where({ id: id });
     });
 }
 
 async function updatePayment(id, data) {
-  return connection("payment")
-    .where("id", id)
-    .update({
-      name: data.name,
-      account_number: data.account_number,
-      updated_at: new Date(),
-    });
+  return connection("payment").where("id", id).update({
+    name: data.name,
+    account_number: data.account_number,
+    updated_at: new Date(),
+  });
 }
 
 async function destroyPayment(id) {
