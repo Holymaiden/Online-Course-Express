@@ -243,7 +243,7 @@ async function paymentTransactionUser(data, ids) {
 async function transactionPerMonth() {
   return connection("transaction")
     .select(connection.raw("COUNT(`id`) as count"))
-    .where({ status: "payed" })
+    .where({ status: "payed", deleted_at: null })
     .groupByRaw("year(`created_at`), month(`created_at`)")
     .orderByRaw("year(`created_at`), month(`created_at`)");
 }
@@ -251,8 +251,8 @@ async function transactionPerMonth() {
 async function transactionPerMonthFail() {
   return connection("transaction")
     .select(connection.raw("COUNT(`id`) as count"))
-    .where({ status: "pending" })
-    .orWhere({ status: "Failed" })
+    .where({ status: "pending", deleted_at: null })
+    .orWhere({ status: "Failed", deleted_at: null })
     .groupByRaw("year(`created_at`), month(`created_at`)")
     .orderByRaw("year(`created_at`), month(`created_at`)");
 }
