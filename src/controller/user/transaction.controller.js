@@ -1,9 +1,10 @@
 const {
   findTransactionUser,
   paymentTransactionUser,
+  transactionPerMonth,
+  transactionPerMonthFail,
 } = require("../../models/transactionModel");
 const { UseDiscount } = require("../../models/discountModel");
-const { createUserCourse } = require("../../models/userCourseModel");
 const { getUser } = require("../../../middleware/auth");
 
 const Response = require("../../response/response");
@@ -18,6 +19,21 @@ transactionUser = async (req, res) => {
     }
 
     return Response.success(res, data);
+  } catch (error) {
+    return res.status(400).json({ err: error.message });
+  }
+};
+
+transactionPerMonthList = async (req, res) => {
+  try {
+    let [data] = await transactionPerMonth();
+    let [datas] = await transactionPerMonthFail();
+
+    if (!data) {
+      return res.status(404).json({ message: "transaction not found" });
+    }
+
+    return Response.success(res, data, datas);
   } catch (error) {
     return res.status(400).json({ err: error.message });
   }
@@ -49,4 +65,5 @@ transactionPaymentUser = async (req, res) => {
 module.exports = {
   transactionUser,
   transactionPaymentUser,
+  transactionPerMonthList,
 };

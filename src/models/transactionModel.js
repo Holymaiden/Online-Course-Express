@@ -240,6 +240,23 @@ async function paymentTransactionUser(data, ids) {
     });
 }
 
+async function transactionPerMonth() {
+  return connection("transaction")
+    .select(connection.raw("COUNT(`id`) as count"))
+    .where({ status: "payed" })
+    .groupByRaw("year(`created_at`), month(`created_at`)")
+    .orderByRaw("year(`created_at`), month(`created_at`)");
+}
+
+async function transactionPerMonthFail() {
+  return connection("transaction")
+    .select(connection.raw("COUNT(`id`) as count"))
+    .where({ status: "pending" })
+    .orWhere({ status: "Failed" })
+    .groupByRaw("year(`created_at`), month(`created_at`)")
+    .orderByRaw("year(`created_at`), month(`created_at`)");
+}
+
 module.exports = {
   findOneTransaction,
   findTransactionUser,
@@ -250,4 +267,6 @@ module.exports = {
   destroyTransaction,
   getAllTransactionPaging,
   paymentTransactionUser,
+  transactionPerMonth,
+  transactionPerMonthFail,
 };
