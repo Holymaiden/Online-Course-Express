@@ -26,14 +26,24 @@ transactionUser = async (req, res) => {
 
 transactionPerMonthList = async (req, res) => {
   try {
-    let [data] = await transactionPerMonth();
-    let [datas] = await transactionPerMonthFail();
+    let data = await transactionPerMonth();
+    let datas = await transactionPerMonthFail();
 
-    if (!data) {
+    a = [];
+    b = [];
+    data.forEach((v) => {
+      a.push(v.count);
+    });
+
+    datas.forEach((v) => {
+      b.push(v.count);
+    });
+
+    if (!data || !datas) {
       return res.status(404).json({ message: "transaction not found" });
     }
 
-    return Response.success(res, data, datas);
+    return Response.success(res, a, b);
   } catch (error) {
     return res.status(400).json({ err: error.message });
   }
