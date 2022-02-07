@@ -37,7 +37,7 @@ courseList = async (req, res) => {
 courseCreate = async (req, res) => {
   try {
     upload.single("image")(req, res, async () => {
-      courseValidation(req, res);
+      // courseValidation(req, res);
       if (req.file == undefined) {
         return res.status(400).json({ message: "no file selected" });
       } else {
@@ -68,23 +68,23 @@ courseCreate = async (req, res) => {
 courseUpdate = async (req, res) => {
   try {
     upload.single("image")(req, res, async () => {
-      courseValidation(req, res);
+      // courseValidation(req, res);
+      let data = req.body;
+      data.slug = slug(req.body.title);
+      let slugData = await checkSlug(data.slug);
+      data.slug = `${data.slug}-${slugData.length}`;
       if (req.file == undefined) {
-        return res.status(400).json({ message: "no file selected" });
+        await updateCourse(req.params.courseId, data);
+
+        return Response.success(res, data);
       } else {
         try {
-          let data = req.body;
-
-          data.slug = slug(req.body.title);
-          let slugData = await checkSlug(data.slug);
-          data.slug = `${data.slug}-${slugData.length}`;
           data.image = "/" + req.file.path.slice(45, 76).replace("\\", "/");
           await updateCourse(req.params.courseId, data);
 
           return Response.success(res, data);
-          // });
         } catch (error) {
-          return res.status(400).json({ err: error });
+          return res.status(400).json({ err: error.message });
         }
       }
     });

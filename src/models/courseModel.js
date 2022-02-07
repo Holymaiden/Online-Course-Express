@@ -1,4 +1,5 @@
 const connection = require("../../config/database");
+const isEmpty = require("../helper/isEmpty");
 
 async function findOneCourse(slug) {
   return connection
@@ -166,19 +167,24 @@ async function createCourse(data) {
 }
 
 async function updateCourse(id, data) {
-  return connection
+  let query = connection
     .update({
       category_id: data.category_id,
       title: data.title,
       description: data.description,
       price: data.price,
-      image: data.image,
       slug: data.slug,
       status: data.status,
       updated_at: new Date(),
     })
     .from("course")
     .where("id", id);
+
+  if (!isEmpty(data.image) && data.image != "undefined") {
+    query = query.update({ image: data.image });
+  }
+
+  return query;
 }
 
 async function destroyCourse(id) {

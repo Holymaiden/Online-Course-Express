@@ -13,7 +13,7 @@ const Bytes = require("../../helper/formatBytes");
 teachingMaterialCreate = async (req, res) => {
   try {
     upload.single("video")(req, res, async () => {
-      teachingMaterialValidation(req, res);
+      // teachingMaterialValidation(req, res);
       if (req.file == undefined) {
         return res.status(400).json({ message: "no file selected" });
       } else {

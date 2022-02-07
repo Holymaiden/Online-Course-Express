@@ -16,7 +16,7 @@ const upload = require("../../../config/multer");
 const register = async (req, res) => {
   try {
     upload.single("avatar")(req, res, async () => {
-      authValidation(req, res);
+      // authValidation(req, res);
       if (req.file == undefined) {
         return res.status(400).json({ message: "no file selected" });
       } else {
