@@ -66,12 +66,12 @@ courseDetail = async (req, res) => {
   try {
     let data = await findOneCourse(req.params.slug);
 
-    if (!data) {
+    if (isEmpty(data)) {
       return res.status(404).json({ message: "data not found" });
     }
-    if (req.headers.authorization == true) {
+    if (req.headers.authorization != "[object Object]") {
       let user = await getUser(req, res);
-      if (user != undefined) {
+      if (!isEmpty(user)) {
         await createCategoryLog(data.category_id, user.id);
         await createCourseLog(data.id, user.id);
       }
