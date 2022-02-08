@@ -19,6 +19,7 @@ const PaymentAdmin = require("./admin/payment");
 const TransactionAdmin = require("./admin/transaction");
 const TransactionUser = require("./user/transaction");
 const DiscountUser = require("./user/discount");
+const RegistrationUser = require("./user/registrations");
 const loginController = require("../src/controller/auth/login.controller");
 const {
   register,
@@ -68,6 +69,7 @@ router.use("/transaction", authUserMiddleware, TransactionUser);
 router.use("/schedule", authUserMiddleware, ScheduleUser);
 router.use("/discount", authUserMiddleware, DiscountUser);
 router.use("/users", authUserMiddleware, userUser);
+router.use("/registrations", authUserMiddleware, RegistrationUser);
 
 // No Auth
 router.get("/popularcourse", coursePopularList);
