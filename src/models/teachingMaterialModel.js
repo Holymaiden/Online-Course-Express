@@ -1,4 +1,5 @@
 const connection = require("../../config/database");
+const isEmpty = require("../helper/isEmpty");
 
 async function findOneTeachingMaterial(slug) {
   return connection
@@ -129,52 +130,37 @@ async function getNumberOfTeachingMaterials() {
 }
 
 async function createTeachingMaterial(data) {
-  return connection("teaching_materials")
-    .insert({
-      course_id: data.course_id,
-      title: data.title,
-      content: data.content,
-      slug: data.slug,
-      description: data.description,
-    })
-    .then(function (id) {
-      return connection
-        .select(
-          "teaching_materials.id",
-          "course.id as course_id",
-          "category.id as category_id",
-          "category.title as category",
-          "course.title as course_title",
-          "teaching_materials.title",
-          "teaching_materials.slug",
-          "teaching_materials.content",
-          "teaching_materials.description",
-          "teaching_materials.status",
-          "teaching_materials.created_at",
-          "teaching_materials.updated_at"
-        )
-        .from("teaching_materials")
-        .where({
-          "teaching_materials.id": id,
-          "course.deleted_at": null,
-          "category.deleted_at": null,
-          "teaching_materials.deleted_at": null,
-        })
-        .leftJoin("course", "teaching_materials.course_id", "course.id")
-        .leftJoin("category", "category.id", "course.category_id");
-    });
-}
-
-async function updateTeachingMaterial(id, data) {
-  return connection("teaching_materials").where("id", id).update({
+  let query = connection("teaching_materials").insert({
     course_id: data.course_id,
     title: data.title,
     slug: data.slug,
-    content: data.content,
-    description: data.description,
+  });
+
+  if (!isEmpty(data.content))
+    query = query.insert({
+      content: data.content,
+      description: data.description,
+    });
+
+  return query;
+}
+
+async function updateTeachingMaterial(id, data) {
+  let query = connection("teaching_materials").where("id", id).update({
+    course_id: data.course_id,
+    title: data.title,
+    slug: data.slug,
     status: data.status,
     updated_at: new Date(),
   });
+
+  if (!isEmpty(data.content))
+    query = query.insert({
+      content: data.content,
+      description: data.description,
+    });
+
+  return query;
 }
 
 async function destroyTeachingMaterial(id) {

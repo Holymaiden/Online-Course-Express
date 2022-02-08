@@ -57,7 +57,6 @@ const userUpdate = async (req, res) => {
       const data = req.body;
       if (!isEmpty(req.body.password))
         data.password = await hashingPassword(req.body.password, 10);
-      console.log(data.password);
       if (req.file == undefined) {
         users = await updateUser(data, req.params.dataId);
         return Response.success(res, users);

@@ -137,33 +137,22 @@ async function getNumberOfFreeCourses() {
 }
 
 async function createCourse(data) {
-  return connection
+  let query = connection
     .insert({
       category_id: data.category_id,
       title: data.title,
       description: data.description,
-      image: data.image,
+
       price: data.price,
       slug: data.slug,
       created_at: new Date(),
     })
-    .from("course")
-    .then(function (id) {
-      return connection
-        .select(
-          "id",
-          "title",
-          "slug",
-          "image",
-          "content",
-          "description",
-          "price",
-          "status",
-          "created_at"
-        )
-        .from("course")
-        .where("id", id);
-    });
+    .from("course");
+
+  if (!isEmpty(data.image)) {
+    query = query.insert({ image: data.image });
+  }
+  return query;
 }
 
 async function updateCourse(id, data) {

@@ -38,21 +38,27 @@ courseCreate = async (req, res) => {
   try {
     upload.single("image")(req, res, async () => {
       // courseValidation(req, res);
+      let data = req.body;
+
+      data.slug = slug(req.body.title);
+      let slugData = await checkSlug(data.slug);
+      data.slug = `${data.slug}-${slugData.length}`;
       if (req.file == undefined) {
-        return res.status(400).json({ message: "no file selected" });
+        try {
+          data = await createCourse(data);
+
+          return Response.success(res, data);
+        } catch (error) {
+          return Response.error(res, "intinya error");
+        }
       } else {
         try {
-          let data = req.body;
-          //   data.image = uploadResponse.secure_url;
-          data.slug = slug(req.body.title);
-          let slugData = await checkSlug(data.slug);
-          data.slug = `${data.slug}-${slugData.length}`;
           data.image = "/" + req.file.path.slice(45, 76).replace("\\", "/");
           data = await createCourse(data);
+
           return Response.success(res, data);
-          // });
         } catch (error) {
-          return res.status(400).json({ err: error });
+          return Response.error(res, "intinya error");
         }
       }
     });
