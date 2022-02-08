@@ -1,4 +1,5 @@
 const connection = require("../../config/database");
+const isEmpty = require("../helper/isEmpty");
 
 async function findOneUser(username) {
   return connection
@@ -84,34 +85,24 @@ async function createUser(data) {
 }
 
 async function updateUser(data, dataId) {
-  return connection
+  let query = connection
     .update({
       username: data.username,
-      password: data.password,
       email: data.email,
-      avatar: data.avatar,
       birth: data.birth,
       address: data.address,
       status: data.status,
       updated_at: new Date(),
     })
     .from("users")
-    .where({ id: dataId, deleted_at: null })
-    .then(function () {
-      return connection
-        .select(
-          "id",
-          "username",
-          "email",
-          "avatar",
-          "birth",
-          "address",
-          "status",
-          "created_at"
-        )
-        .from("users")
-        .where("id", dataId);
-    });
+    .where({ id: dataId, deleted_at: null });
+
+  if (!isEmpty(data.password))
+    query = query.update({ password: data.password });
+
+  if (!isEmpty(data.avatar)) query = query.update({ avatar: data.avatar });
+
+  return query;
 }
 
 async function destroyUser(dataId) {

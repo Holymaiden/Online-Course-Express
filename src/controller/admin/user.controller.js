@@ -9,6 +9,7 @@ const {
 const { hashingPassword } = require("../../helper/hashPassword");
 const Response = require("../../response/response");
 const upload = require("../../../config/multer");
+const isEmpty = require("../../helper/isEmpty");
 
 const userList = async (req, res) => {
   try {
@@ -53,12 +54,15 @@ const userDestroy = async (req, res) => {
 const userUpdate = async (req, res) => {
   try {
     upload.single("avatar")(req, res, async () => {
+      const data = req.body;
+      if (!isEmpty(req.body.password))
+        data.password = await hashingPassword(req.body.password, 10);
+      console.log(data.password);
       if (req.file == undefined) {
-        return res.status(400).json({ message: "no file selected" });
+        users = await updateUser(data, req.params.dataId);
+        return Response.success(res, users);
       } else {
         try {
-          const data = req.body;
-          data.password = await hashingPassword(req.body.password, 10);
           data.avatar = "/" + req.file.path.slice(45, 76).replace("\\", "/");
           users = await updateUser(data, req.params.dataId);
 
