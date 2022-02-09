@@ -3,6 +3,9 @@ exports.up = function (knex) {
     table.increments("id").primary();
     table.integer("user_id").unsigned();
     table.string("cv", 50);
+    table
+      .enu("status", ["pending", "approved", "rejected"])
+      .defaultTo("pending");
     table.timestamp("created_at").defaultTo(knex.fn.now());
     table.datetime("updated_at").nullable();
     table.datetime("deleted_at").nullable();
